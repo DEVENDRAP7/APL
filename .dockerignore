@@ -1,0 +1,12 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+tests/
+.git/
+.github/
+public/
+architecture.html
+*.md
