@@ -1,0 +1,31 @@
+{
+  "venue_id": "venue-001",
+  "name": "MetroArena",
+  "total_capacity": 72000,
+  "zones": {
+    "gate_north": { "name": "Gate North", "capacity": 5000, "type": "entry_gate" },
+    "gate_south": { "name": "Gate South", "capacity": 5000, "type": "entry_gate" },
+    "gate_east":  { "name": "Gate East",  "capacity": 3000, "type": "entry_gate" },
+    "gate_west":  { "name": "Gate West",  "capacity": 3000, "type": "entry_gate" },
+    "concourse_north": { "name": "Concourse North", "capacity": 8000, "type": "concourse" },
+    "concourse_south": { "name": "Concourse South", "capacity": 8000, "type": "concourse" },
+    "concourse_east":  { "name": "Concourse East",  "capacity": 5000, "type": "concourse" },
+    "concourse_west":  { "name": "Concourse West",  "capacity": 5000, "type": "concourse" },
+    "food_north": { "name": "Food Court North", "capacity": 2000, "type": "concession" },
+    "food_south": { "name": "Food Court South", "capacity": 2000, "type": "concession" },
+    "restroom_a": { "name": "Restroom Block A", "capacity": 200, "type": "restroom" },
+    "restroom_b": { "name": "Restroom Block B", "capacity": 200, "type": "restroom" },
+    "parking_a":  { "name": "Parking Lot A",    "capacity": 1200, "type": "parking" },
+    "parking_b":  { "name": "Parking Lot B",    "capacity": 800,  "type": "parking" },
+    "first_aid":  { "name": "First Aid Station", "capacity": 50, "type": "first_aid" },
+    "seating_main": { "name": "Main Seating Bowl", "capacity": 65000, "type": "seating" }
+  },
+  "cameras": {
+    "cam_gate_north": "gate_north",
+    "cam_gate_south": "gate_south",
+    "cam_concourse_n": "concourse_north",
+    "cam_concourse_s": "concourse_south",
+    "cam_food_north": "food_north",
+    "cam_parking_a": "parking_a"
+  }
+}

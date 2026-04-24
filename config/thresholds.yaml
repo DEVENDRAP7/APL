@@ -1,0 +1,20 @@
+crowd_density:
+  warning: 0.70
+  critical: 0.85
+  emergency: 0.95
+
+queue_depth:
+  warning: 8
+  critical: 15
+  emergency: 25
+
+parking_bay:
+  warning: 0.75
+  critical: 0.90
+
+structural_load:
+  warning: 0.70
+  critical: 0.85
+
+camera_anomaly:
+  vision_threshold: 0.70

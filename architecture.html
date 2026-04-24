@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venue Intelligence System — Live Architecture</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #060b14;
+    color: #e0f0ff;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 28px 20px 16px;
+    position: relative;
+  }
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00d4ff, #7b5ea7, #00d4ff);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 4s linear infinite;
+    letter-spacing: 2px;
+  }
+  .header p { color: #7a9ab5; font-size: .85rem; margin-top: 6px; letter-spacing: 1px; }
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(0,255,100,.1); border: 1px solid rgba(0,255,100,.3);
+    color: #00ff64; font-size: .72rem; padding: 3px 10px; border-radius: 20px;
+    margin-top: 8px; letter-spacing: 1px;
+  }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #00ff64; animation: blink 1s infinite; }
+
+  @keyframes gradientShift { 0%{background-position:0%} 100%{background-position:200%} }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* ── GLOBAL STATS BAR ── */
+  .stats-bar {
+    display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+    padding: 10px 20px 18px;
+  }
+  .stat-chip {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+    border-radius: 8px; padding: 8px 18px; text-align: center;
+    min-width: 120px;
+  }
+  .stat-chip .val { font-size: 1.4rem; font-weight: 700; }
+  .stat-chip .lbl { font-size: .65rem; color: #7a9ab5; letter-spacing: 1px; margin-top: 2px; }
+
+  /* ── LAYER WRAPPER ── */
+  .architecture {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── LAYER ── */
+  .layer {
+    border-radius: 16px;
+    padding: 18px 20px 22px;
+    margin-bottom: 6px;
+    position: relative;
+  }
+  .layer-title {
+    font-size: .68rem; letter-spacing: 3px; font-weight: 600; text-transform: uppercase;
+    margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .layer-title::after {
+    content: ''; flex: 1; height: 1px; background: currentColor; opacity: .15;
+  }
+
+  .layer-physical { background: rgba(0,60,100,.18); border: 1px solid rgba(0,180,255,.12); }
+  .layer-physical .layer-title { color: #00b4ff; }
+
+  .layer-ingestion { background: rgba(0,80,60,.18); border: 1px solid rgba(0,220,160,.12); }
+  .layer-ingestion .layer-title { color: #00dcA0; }
+
+  .layer-core { background: rgba(80,0,120,.18); border: 1px solid rgba(180,80,255,.15); }
+  .layer-core .layer-title { color: #c46aff; }
+
+  .layer-agents { background: rgba(100,40,0,.18); border: 1px solid rgba(255,140,0,.12); }
+  .layer-agents .layer-title { color: #ff9500; }
+
+  .layer-outputs { background: rgba(0,80,40,.15); border: 1px solid rgba(0,255,100,.1); }
+  .layer-outputs .layer-title { color: #00ff80; }
+
+  /* ── NODE GRID ── */
+  .node-row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+
+  /* ── NODE ── */
+  .node {
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px; cursor: pointer; transition: transform .2s, box-shadow .2s;
+    position: relative; min-width: 110px; max-width: 150px;
+    text-align: center;
+  }
+  .node:hover { transform: translateY(-3px); }
+
+  .node-icon { font-size: 1.6rem; line-height: 1; }
+  .node-name { font-size: .72rem; font-weight: 600; line-height: 1.3; }
+  .node-desc { font-size: .6rem; color: #7a9ab5; line-height: 1.3; }
+  .node-pulse {
+    position: absolute; top: 8px; right: 8px;
+    width: 7px; height: 7px; border-radius: 50%;
+    animation: pulseGlow 2s infinite;
+  }
+
+  /* Sensor nodes */
+  .node-sensor {
+    background: rgba(0,140,220,.12); border: 1px solid rgba(0,180,255,.25);
+  }
+  .node-sensor .node-pulse { background: #00b4ff; box-shadow: 0 0 6px #00b4ff; }
+  .node-sensor:hover { box-shadow: 0 0 20px rgba(0,180,255,.2); }
+
+  /* Camera nodes */
+  .node-camera {
+    background: rgba(0,100,180,.12); border: 1px solid rgba(80,160,255,.25);
+  }
+  .node-camera .node-pulse { background: #5090ff; box-shadow: 0 0 6px #5090ff; }
+  .node-camera:hover { box-shadow: 0 0 20px rgba(80,160,255,.2); }
+
+  /* Ingestion nodes */
+  .node-ingest {
+    background: rgba(0,140,100,.12); border: 1px solid rgba(0,220,160,.25);
+    min-width: 140px;
+  }
+  .node-ingest .node-pulse { background: #00dca0; box-shadow: 0 0 6px #00dca0; }
+  .node-ingest:hover { box-shadow: 0 0 20px rgba(0,220,160,.2); }
+
+  /* Core nodes */
+  .node-core-item {
+    background: rgba(100,0,160,.12); border: 1px solid rgba(180,80,255,.25);
+    min-width: 160px;
+  }
+  .node-core-item .node-pulse { background: #c46aff; box-shadow: 0 0 6px #c46aff; }
+  .node-core-item:hover { box-shadow: 0 0 20px rgba(180,80,255,.2); }
+
+  /* Orchestrator */
+  .node-orchestrator {
+    background: linear-gradient(135deg, rgba(255,120,0,.15), rgba(200,0,120,.15));
+    border: 2px solid rgba(255,140,0,.4);
+    min-width: 180px; padding: 18px 20px;
+    box-shadow: 0 0 30px rgba(255,140,0,.1);
+  }
+  .node-orchestrator .node-icon { font-size: 2rem; }
+  .node-orchestrator .node-name { font-size: .85rem; color: #ff9500; }
+  .node-orchestrator .node-pulse { background: #ff9500; box-shadow: 0 0 10px #ff9500; width: 10px; height: 10px; }
+  .node-orchestrator:hover { box-shadow: 0 0 40px rgba(255,140,0,.25); }
+
+  /* Sub-agent nodes */
+  .node-agent {
+    background: rgba(180,80,0,.1); border: 1px solid rgba(255,140,0,.2);
+  }
+  .node-agent .node-pulse { background: #ffaa44; box-shadow: 0 0 6px #ffaa44; }
+  .node-agent:hover { box-shadow: 0 0 20px rgba(255,140,0,.2); }
+
+  /* Emergency agent */
+  .node-emergency {
+    background: rgba(200,0,0,.12); border: 1px solid rgba(255,60,60,.3);
+  }
+  .node-emergency .node-pulse { background: #ff4444; box-shadow: 0 0 8px #ff4444; animation: pulseGlow .8s infinite; }
+  .node-emergency:hover { box-shadow: 0 0 20px rgba(255,60,60,.25); }
+
+  /* Output nodes */
+  .node-output {
+    background: rgba(0,120,60,.1); border: 1px solid rgba(0,255,100,.2);
+  }
+  .node-output .node-pulse { background: #00ff80; box-shadow: 0 0 6px #00ff80; }
+  .node-output:hover { box-shadow: 0 0 20px rgba(0,255,100,.15); }
+
+  @keyframes pulseGlow {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .4; transform: scale(1.4); }
+  }
+
+  /* ── AGENTS LAYOUT ── */
+  .agents-layout {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .agents-left, .agents-right {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .agents-center { display: flex; align-items: center; justify-content: center; }
+
+  /* ── FLOW ARROWS ── */
+  .flow-arrow {
+    display: flex; justify-content: center; align-items: center;
+    padding: 4px 0; position: relative; height: 36px;
+  }
+  .arrow-line {
+    width: 2px; height: 100%; background: linear-gradient(180deg, transparent, #334466, transparent);
+    position: relative; margin: 0 auto;
+  }
+  .arrow-line::after {
+    content: '▼'; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+    color: #334466; font-size: .7rem;
+  }
+  .flow-label {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    background: rgba(6,11,20,.9); border: 1px solid rgba(255,255,255,.08);
+    color: #7a9ab5; font-size: .6rem; padding: 2px 8px; border-radius: 10px;
+    white-space: nowrap; letter-spacing: .5px;
+  }
+
+  /* ── LIVE FEED PANEL ── */
+  .live-feed {
+    max-width: 1400px; margin: 0 auto 40px; padding: 0 20px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .feed-panel {
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 12px; padding: 16px; height: 220px; overflow: hidden;
+  }
+  .feed-panel h3 { font-size: .7rem; letter-spacing: 2px; color: #7a9ab5; margin-bottom: 12px; text-transform: uppercase; }
+  .feed-log { display: flex; flex-direction: column; gap: 6px; }
+  .feed-entry {
+    font-size: .68rem; padding: 5px 8px; border-radius: 6px;
+    border-left: 3px solid;
+    animation: slideIn .3s ease;
+  }
+  .feed-entry.info { background: rgba(0,140,220,.08); border-color: #00b4ff; color: #a0d4f0; }
+  .feed-entry.warn { background: rgba(255,160,0,.08); border-color: #ffa000; color: #ffd080; }
+  .feed-entry.crit { background: rgba(255,40,40,.1); border-color: #ff4444; color: #ffaaaa; }
+  .feed-entry.ok   { background: rgba(0,200,100,.08); border-color: #00c864; color: #80ffb0; }
+  .feed-time { color: #4a6a85; margin-right: 6px; }
+
+  @keyframes slideIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:none; } }
+
+  /* ── ZONE STATUS GRID ── */
+  .zone-grid {
+    max-width: 1400px; margin: 0 auto 40px; padding: 0 20px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;
+  }
+  .zone-card {
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 10px; padding: 14px;
+  }
+  .zone-card h4 { font-size: .72rem; color: #a0b8cc; margin-bottom: 10px; }
+  .zone-bar-wrap { height: 6px; background: rgba(255,255,255,.08); border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+  .zone-bar { height: 100%; border-radius: 3px; transition: width .8s ease, background .5s; }
+  .zone-stats { display: flex; justify-content: space-between; font-size: .62rem; color: #7a9ab5; }
+
+  /* ── CANVAS OVERLAY ── */
+  #flowCanvas {
+    position: fixed; top: 0; left: 0; pointer-events: none;
+    z-index: 10; opacity: .6;
+  }
+
+  /* ── TOOLTIP ── */
+  .tooltip {
+    position: fixed; z-index: 100;
+    background: rgba(6,11,20,.97); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 10px; padding: 12px 16px; max-width: 260px;
+    font-size: .72rem; line-height: 1.6; color: #c0d8e8;
+    pointer-events: none; opacity: 0; transition: opacity .2s;
+    box-shadow: 0 8px 32px rgba(0,0,0,.6);
+  }
+  .tooltip.visible { opacity: 1; }
+  .tooltip strong { color: #fff; display: block; margin-bottom: 4px; font-size: .78rem; }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    text-align: center; font-size: .65rem; letter-spacing: 2px; color: #4a6a85;
+    text-transform: uppercase; margin: 0 auto 8px; max-width: 1400px; padding: 0 20px;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #060b14; }
+  ::-webkit-scrollbar-thumb { background: #1a2a3a; border-radius: 3px; }
+
+  @media (max-width: 700px) {
+    .agents-layout { grid-template-columns: 1fr; }
+    .live-feed { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="flowCanvas"></canvas>
+<div class="tooltip" id="tooltip"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>⚡ VENUE INTELLIGENCE SYSTEM</h1>
+  <p>AI-Powered Multi-Agent Ecosystem · Large-Scale Sporting Venues</p>
+  <div class="live-badge"><span class="live-dot"></span> LIVE SIMULATION</div>
+</div>
+
+<!-- GLOBAL STATS -->
+<div class="stats-bar">
+  <div class="stat-chip">
+    <div class="val" id="stat-attendees" style="color:#00b4ff">72,441</div>
+    <div class="lbl">ATTENDEES LIVE</div>
+  </div>
+  <div class="stat-chip">
+    <div class="val" id="stat-sensors" style="color:#00dca0">284</div>
+    <div class="lbl">ACTIVE SENSORS</div>
+  </div>
+  <div class="stat-chip">
+    <div class="val" id="stat-cameras" style="color:#5090ff">96</div>
+    <div class="lbl">CAMERAS ONLINE</div>
+  </div>
+  <div class="stat-chip">
+    <div class="val" id="stat-events" style="color:#c46aff">0</div>
+    <div class="lbl">EVENTS / MIN</div>
+  </div>
+  <div class="stat-chip">
+    <div class="val" id="stat-agents" style="color:#ff9500">9</div>
+    <div class="lbl">AGENTS ACTIVE</div>
+  </div>
+  <div class="stat-chip">
+    <div class="val" id="stat-alerts" style="color:#ffaa44">0</div>
+    <div class="lbl">ACTIVE ALERTS</div>
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="architecture">
+
+  <!-- LAYER 1: PHYSICAL WORLD -->
+  <div class="layer layer-physical">
+    <div class="layer-title">🌐 Layer 1 — Physical World (Real Venue Hardware)</div>
+    <div class="node-row" id="sensors-row">
+      <div class="node node-sensor" data-tip="Infrared/thermal arrays mounted in concourses and seating blocks. Measures real-time crowd density (people/sqm) every 5 seconds." data-id="s-crowd">
+        <div class="node-pulse"></div>
+        <div class="node-icon">📡</div>
+        <div class="node-name">Crowd Density Sensors</div>
+        <div class="node-desc">86 zones · 5s interval</div>
+      </div>
+      <div class="node node-sensor" data-tip="Ultrasonic & laser time-of-flight sensors at concession stands, restrooms, and merchandise points. Measures queue length in real time." data-id="s-queue">
+        <div class="node-pulse"></div>
+        <div class="node-icon">📶</div>
+        <div class="node-name">Queue Depth Sensors</div>
+        <div class="node-desc">48 points · 5s interval</div>
+      </div>
+      <div class="node node-sensor" data-tip="Access control hardware on every entry/exit gate. Fires an event on every turnstile rotation — gives exact inbound/outbound count per gate." data-id="s-turnstile">
+        <div class="node-pulse"></div>
+        <div class="node-icon">🚪</div>
+        <div class="node-name">Turnstile Counters</div>
+        <div class="node-desc">32 gates · real-time</div>
+      </div>
+      <div class="node node-sensor" data-tip="CO₂, temperature, and humidity sensors in concourses and concession areas. Feeds into HVAC control and comfort monitoring." data-id="s-env">
+        <div class="node-pulse"></div>
+        <div class="node-icon">🌡️</div>
+        <div class="node-name">Environmental Sensors</div>
+        <div class="node-desc">CO₂ · Temp · Humidity</div>
+      </div>
+      <div class="node node-sensor" data-tip="Magnetic and ultrasonic sensors per parking bay across all lots. Gives exact occupancy count and open-bay locations in real time." data-id="s-parking">
+        <div class="node-pulse"></div>
+        <div class="node-icon">🅿️</div>
+        <div class="node-name">Parking Bay Sensors</div>
+        <div class="node-desc">1,200 bays · 10s interval</div>
+      </div>
+      <div class="node node-sensor" data-tip="Vibration and structural load sensors on upper decks and cantilevered sections. Monitors structural stress — triggers safety alert if thresholds are exceeded." data-id="s-struct">
+        <div class="node-pulse"></div>
+        <div class="node-icon">🏟️</div>
+        <div class="node-name">Structural Sensors</div>
+        <div class="node-desc">Upper decks · 1s interval</div>
+      </div>
+    </div>
+    <div style="margin-top:14px">
+      <div class="node-row" id="cameras-row">
+        <div class="node node-camera" data-tip="Fixed cameras at all entry gates. Computer vision detects crowd build-up, tailgating, and suspicious behaviour in real time." data-id="c-gate">
+          <div class="node-pulse"></div>
+          <div class="node-icon">📷</div>
+          <div class="node-name">Gate Cameras</div>
+          <div class="node-desc">32 cameras · RTSP</div>
+        </div>
+        <div class="node node-camera" data-tip="Wide-angle cameras covering all main concourse corridors. Optical flow analysis detects movement direction, speed, and bottleneck formation." data-id="c-concourse">
+          <div class="node-pulse"></div>
+          <div class="node-icon">🎥</div>
+          <div class="node-name">Concourse Cameras</div>
+          <div class="node-desc">24 cameras · RTSP</div>
+        </div>
+        <div class="node node-camera" data-tip="Overhead cameras on seating bowl and concession areas. Measures crowd density heatmaps and dwell time patterns." data-id="c-bowl">
+          <div class="node-pulse"></div>
+          <div class="node-icon">🔭</div>
+          <div class="node-name">Bowl & Stand Cameras</div>
+          <div class="node-desc">28 cameras · RTSP</div>
+        </div>
+        <div class="node node-camera" data-tip="Cameras covering all parking lots and rideshare zones. Monitors lot fill rates, shuttle bay capacity, and pedestrian exit flow." data-id="c-parking">
+          <div class="node-pulse"></div>
+          <div class="node-icon">🚗</div>
+          <div class="node-name">Parking Lot Cameras</div>
+          <div class="node-desc">12 cameras · RTSP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARROW -->
+  <div class="flow-arrow">
+    <div class="arrow-line"></div>
+    <div class="flow-label">MQTT (sensors) · RTSP streams (cameras)</div>
+  </div>
+
+  <!-- LAYER 2: INGESTION -->
+  <div class="layer layer-ingestion">
+    <div class="layer-title">⚙️ Layer 2 — Sensor Data Ingestion Pipeline</div>
+    <div class="node-row">
+      <div class="node node-ingest" data-tip="Subscribes to MQTT broker on topic 'venue/+/sensors/#'. Parses every sensor message, validates against schema, and normalises to a standard SensorReading model. Handles ~50 messages/second." data-id="mqtt">
+        <div class="node-pulse"></div>
+        <div class="node-icon">📨</div>
+        <div class="node-name">MQTT Client</div>
+        <div class="node-desc">asyncio-mqtt · Mosquitto broker</div>
+      </div>
+      <div class="node node-ingest" style="min-width:200px" data-tip="Two-track camera processing. Track A: YOLOv8 runs every 5s per camera — headcount, flow vectors, dwell time, density heatmap. Free, always-on. Track B: Claude Vision called only when anomaly_score > 0.7 — deep understanding of unusual crowd behaviour." data-id="cv">
+        <div class="node-pulse"></div>
+        <div class="node-icon">👁️</div>
+        <div class="node-name">CV Service</div>
+        <div class="node-desc">YOLOv8 always-on + Claude Vision on anomaly</div>
+      </div>
+      <div class="node node-ingest" style="min-width:200px" data-tip="The unified pipeline. Deduplicates (10s sliding window), applies threshold gates, enriches data with zone metadata and historical baselines, then publishes SensorEvents to Redis. Only sends to agents when something meaningful happens." data-id="ingest">
+        <div class="node-pulse"></div>
+        <div class="node-icon">🔄</div>
+        <div class="node-name">Ingestion Pipeline</div>
+        <div class="node-desc">Deduplicate · Gate · Enrich · Publish</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARROW -->
+  <div class="flow-arrow">
+    <div class="arrow-line"></div>
+    <div class="flow-label">Enriched SensorEvents → Redis Pub/Sub</div>
+  </div>
+
+  <!-- LAYER 3: CORE -->
+  <div class="layer layer-core">
+    <div class="layer-title">🧠 Layer 3 — Core Intelligence Infrastructure</div>
+    <div class="node-row">
+      <div class="node node-core-item" data-tip="All live venue data lives here. ZoneState for every zone updates every 5 seconds. Agents read from Redis instead of calling hardware directly — fast, consistent, decoupled." data-id="redis">
+        <div class="node-pulse"></div>
+        <div class="node-icon">🗄️</div>
+        <div class="node-name">Redis State Store</div>
+        <div class="node-desc">Live venue state · &lt;1s TTL per zone</div>
+      </div>
+      <div class="node node-core-item" data-tip="The nervous system connecting all components. High-priority events (density breach, power failure, medical alert) bypass the queue and fan out to multiple agents in parallel using Redis Pub/Sub channels." data-id="eventbus">
+        <div class="node-pulse"></div>
+        <div class="node-icon">⚡</div>
+        <div class="node-name">Event Bus</div>
+        <div class="node-desc">asyncio.Queue + Redis Pub/Sub</div>
+      </div>
+      <div class="node node-core-item" data-tip="Manages prompt caching for all Claude API calls. Keeps the large static venue context (4K tokens) cached for 1 hour, saving ~80% of token costs. Ensures dynamic data never pollutes the cache prefix." data-id="cache">
+        <div class="node-pulse"></div>
+        <div class="node-icon">💾</div>
+        <div class="node-name">Cache Manager</div>
+        <div class="node-desc">Prompt cache · 4 tiers · up to 1h TTL</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARROW -->
+  <div class="flow-arrow">
+    <div class="arrow-line"></div>
+    <div class="flow-label">Routed events → Agent orchestration layer</div>
+  </div>
+
+  <!-- LAYER 4: AGENTS -->
+  <div class="layer layer-agents">
+    <div class="layer-title">🤖 Layer 4 — AI Agent Ecosystem (Claude-Powered)</div>
+    <div class="agents-layout">
+      <!-- LEFT AGENTS -->
+      <div class="agents-left">
+        <div class="node node-agent" style="max-width:100%" data-tip="Monitors crowd density across all zones. Uses IoT sensors + camera analytics to predict congestion 5-60 minutes ahead. Opens auxiliary gates, updates digital signage, and instructs usher teams before problems escalate." data-id="a-crowd">
+          <div class="node-pulse"></div>
+          <div style="display:flex;align-items:center;gap:10px;width:100%">
+            <div class="node-icon">👥</div>
+            <div>
+              <div class="node-name" style="text-align:left">CrowdFlow Agent</div>
+              <div class="node-desc" style="text-align:left">Density · Gates · Signage · Predictions</div>
+            </div>
+          </div>
+        </div>
+        <div class="node node-agent" style="max-width:100%" data-tip="Tracks queue lengths at every concession stand, restroom, and merchandise point. Recommends staff redeployment, updates digital wait boards, and sends personal notifications to attendees near long queues." data-id="a-wait">
+          <div class="node-pulse"></div>
+          <div style="display:flex;align-items:center;gap:100%;width:100%">
+            <div class="node-icon">⏱️</div>
+            <div>
+              <div class="node-name" style="text-align:left">WaitTime Agent</div>
+              <div class="node-desc" style="text-align:left">Queue management · Staff balancing</div>
+            </div>
+          </div>
+        </div>
+        <div class="node node-agent" style="max-width:100%" data-tip="Tracks all staff (security, medics, ushers, logistics) by GPS. Dispatches, reassigns, and sends radio+app instructions. Ensures every zone has the right staff at the right time." data-id="a-staff">
+          <div class="node-pulse"></div>
+          <div style="display:flex;align-items:center;gap:10px;width:100%">
+            <div class="node-icon">👮</div>
+            <div>
+              <div class="node-name" style="text-align:left">Staff Coordination Agent</div>
+              <div class="node-desc" style="text-align:left">Dispatch · Radio · GPS tracking</div>
+            </div>
+          </div>
+        </div>
+        <div class="node node-agent" style="max-width:100%" data-tip="Monitors parking lot occupancy, coordinates rideshare staging zones, dispatches extra shuttles, and predicts post-game vehicle surges up to 30 minutes ahead to pre-position resources." data-id="a-parking">
+          <div class="node-pulse"></div>
+          <div style="display:flex;align-items:center;gap:10px;width:100%">
+            <div class="node-icon">🚌</div>
+            <div>
+              <div class="node-name" style="text-align:left">Parking & Transport Agent</div>
+              <div class="node-desc" style="text-align:left">Lots · Shuttles · Rideshare · Transit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER: ORCHESTRATOR -->
+      <div class="agents-center">
+        <div class="node node-orchestrator" data-tip="The brain of the entire system. Uses Claude Opus 4.7 with adaptive thinking. Receives every event, classifies severity, routes to the right sub-agents (in parallel when possible), resolves conflicts, and maintains the overall venue mode (normal → elevated → emergency → evacuation)." data-id="orchestrator">
+          <div class="node-pulse"></div>
+          <div class="node-icon">🎯</div>
+          <div class="node-name">VENUE ORCHESTRATOR</div>
+          <div class="node-desc" style="color:#ff9500aa">claude-opus-4-7 · Adaptive Thinking</div>
+          <div class="node-desc" style="margin-top:4px">Central routing · State management · Mode control</div>
+        </div>
+      </div>
+
+      <!-- RIGHT AGENTS -->
+      <div class="agents-right">
+        <div class="node node-emergency" style="max-width:100%" data-tip="Safety-critical agent using Claude Opus 4.7. Handles medical emergencies, security incidents, fires, and structural alerts. Coordinates EMS, police, and fire services. Generates calm NIMS-format PA announcements and manages evacuation routing — streaming output so the PA system starts broadcasting immediately." data-id="a-emergency">
+          <div class="node-pulse"></div>
+          <div style="display:flex;align-items:center;gap:10px;width:100%">
+            <div class="node-icon">🚨</div>
+            <div>
+              <div class="node-name" style="text-align:left;color:#ff6666">Emergency Response Agent</div>
+              <div class="node-desc" style="text-align:left">Medical · Security · Fire · Evacuation</div>
+            </div>
+          </div>
+        </div>
+        <div class="node node-agent" style="max-width:100%" data-tip="The attendee-facing conversational agent. Streams responses in real time to the mobile app. Helps with seat finding, food ordering, accessibility needs, lost & found, and live schedule updates — in the attendee's preferred language." data-id="a-attendee">
+          <div class="node-pulse"></div>
+          <div style="display:flex;align-items:center;gap:10px;width:100%">
+            <div class="node-icon">📱</div>
+            <div>
+              <div class="node-name" style="text-align:left">Attendee Experience Agent</div>
+              <div class="node-desc" style="text-align:left">Chat · Seats · Food · Accessibility</div>
+            </div>
+          </div>
+        </div>
+        <div class="node node-agent" style="max-width:100%" data-tip="Monitors all venue infrastructure: power, HVAC, AV systems, network, and structural sensors. Detects anomalies early and dispatches maintenance before attendees notice any problem." data-id="a-infra">
+          <div class="node-pulse"></div>
+          <div style="display:flex;align-items:center;gap:10px;width:100%">
+            <div class="node-icon">🔧</div>
+            <div>
+              <div class="node-name" style="text-align:left">Infrastructure Monitor Agent</div>
+              <div class="node-desc" style="text-align:left">Power · HVAC · AV · Network</div>
+            </div>
+          </div>
+        </div>
+        <div class="node node-agent" style="max-width:100%" data-tip="Synthesises data from all agents into operational intelligence: live KPI dashboards, revenue snapshots, historical comparisons, and post-event reports for the management team." data-id="a-analytics">
+          <div class="node-pulse"></div>
+          <div style="display:flex;align-items:center;gap:10px;width:100%">
+            <div class="node-icon">📊</div>
+            <div>
+              <div class="node-name" style="text-align:left">Analytics Insight Agent</div>
+              <div class="node-desc" style="text-align:left">KPIs · Revenue · Reports · Forecasts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARROW -->
+  <div class="flow-arrow">
+    <div class="arrow-line"></div>
+    <div class="flow-label">Agent actions → Real-world outputs</div>
+  </div>
+
+  <!-- LAYER 5: OUTPUTS -->
+  <div class="layer layer-outputs">
+    <div class="layer-title">📤 Layer 5 — Real-World Outputs</div>
+    <div class="node-row">
+      <div class="node node-output" data-tip="Real-time chat interface for every attendee. Streams Claude responses character-by-character via WebSocket. Handles 72,000+ concurrent sessions.">
+        <div class="node-pulse"></div>
+        <div class="node-icon">📱</div>
+        <div class="node-name">Attendee Mobile App</div>
+        <div class="node-desc">WebSocket streaming chat</div>
+      </div>
+      <div class="node node-output" data-tip="Operations dashboard for venue management team. Live zone heatmaps, staff positions, queue lengths, and incident timeline.">
+        <div class="node-pulse"></div>
+        <div class="node-icon">🖥️</div>
+        <div class="node-name">Operations Dashboard</div>
+        <div class="node-desc">Live heatmaps · Staff tracking</div>
+      </div>
+      <div class="node node-output" data-tip="Public address system for zone-targeted or venue-wide announcements. Emergency agent streams output directly so PA starts broadcasting before the full message is composed.">
+        <div class="node-pulse"></div>
+        <div class="node-icon">📣</div>
+        <div class="node-name">PA System</div>
+        <div class="node-desc">Zone-targeted · Streaming output</div>
+      </div>
+      <div class="node node-output" data-tip="All digital signs and wayfinding boards across the venue. Updated in seconds with crowd routing instructions, queue wait times, and event information.">
+        <div class="node-pulse"></div>
+        <div class="node-icon">🪧</div>
+        <div class="node-name">Digital Signage</div>
+        <div class="node-desc">Queue times · Routing · Alerts</div>
+      </div>
+      <div class="node node-output" data-tip="Direct API integrations with EMS, police, fire department, and local transit feeds. Emergency agent contacts services with structured incident data and venue access codes.">
+        <div class="node-pulse"></div>
+        <div class="node-icon">🚑</div>
+        <div class="node-name">Emergency Services</div>
+        <div class="node-desc">EMS · Police · Fire · Transit</div>
+      </div>
+      <div class="node node-output" data-tip="Staff radio and mobile app integration. Every dispatch, redeployment, and instruction from the Staff Coordination Agent is delivered here simultaneously.">
+        <div class="node-pulse"></div>
+        <div class="node-icon">📻</div>
+        <div class="node-name">Staff Radio & App</div>
+        <div class="node-desc">Dispatch · Instructions · GPS</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- LIVE FEED + ZONE STATUS -->
+<div class="section-label">LIVE EVENT FEED</div>
+<div class="live-feed">
+  <div class="feed-panel">
+    <h3>🔴 System Event Log</h3>
+    <div class="feed-log" id="event-log"></div>
+  </div>
+  <div class="feed-panel">
+    <h3>🤖 Agent Activity</h3>
+    <div class="feed-log" id="agent-log"></div>
+  </div>
+</div>
+
+<div class="section-label">LIVE ZONE STATUS</div>
+<div class="zone-grid" id="zone-grid"></div>
+
+<script>
+// ── TOOLTIP ──────────────────────────────────────────────────────
+const tooltip = document.getElementById('tooltip');
+document.querySelectorAll('[data-tip]').forEach(el => {
+  el.addEventListener('mouseenter', e => {
+    tooltip.innerHTML = `<strong>${el.querySelector('.node-name')?.textContent || ''}</strong>${el.dataset.tip}`;
+    tooltip.classList.add('visible');
+  });
+  el.addEventListener('mousemove', e => {
+    let x = e.clientX + 14, y = e.clientY - 10;
+    if (x + 270 > window.innerWidth) x = e.clientX - 280;
+    tooltip.style.left = x + 'px'; tooltip.style.top = y + 'px';
+  });
+  el.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+});
+
+// ── ZONE DATA ────────────────────────────────────────────────────
+const zones = [
+  { name: 'Gate A — North', occ: 78, wait: 4 },
+  { name: 'Gate B — South', occ: 45, wait: 2 },
+  { name: 'Concourse N', occ: 88, wait: 0 },
+  { name: 'Concourse S', occ: 62, wait: 0 },
+  { name: 'Section 110 Food', occ: 0, wait: 12 },
+  { name: 'Section 210 Food', occ: 0, wait: 7 },
+  { name: 'Lot A Parking', occ: 92, wait: 0 },
+  { name: 'Lot B Parking', occ: 67, wait: 0 },
+  { name: 'Restroom Block 1', occ: 0, wait: 3 },
+  { name: 'Restroom Block 2', occ: 0, wait: 8 },
+];
+
+function occColor(p) {
+  if (p > 85) return '#ff4444';
+  if (p > 70) return '#ffa000';
+  return '#00c864';
+}
+
+const zoneGrid = document.getElementById('zone-grid');
+zones.forEach((z, i) => {
+  const isQueue = z.occ === 0;
+  const pct = isQueue ? Math.min(z.wait * 8, 100) : z.occ;
+  const color = isQueue ? (z.wait > 10 ? '#ff4444' : z.wait > 5 ? '#ffa000' : '#00c864') : occColor(z.occ);
+  const card = document.createElement('div');
+  card.className = 'zone-card';
+  card.id = `zone-${i}`;
+  card.innerHTML = `
+    <h4>${z.name}</h4>
+    <div class="zone-bar-wrap"><div class="zone-bar" id="zbar-${i}" style="width:${pct}%;background:${color}"></div></div>
+    <div class="zone-stats">
+      <span id="zstat-${i}">${isQueue ? `Wait: ${z.wait}m` : `Occ: ${z.occ}%`}</span>
+      <span id="zlvl-${i}" style="color:${color}">${pct > 85 ? 'CRITICAL' : pct > 70 ? 'ELEVATED' : 'NORMAL'}</span>
+    </div>`;
+  zoneGrid.appendChild(card);
+});
+
+// ── LIVE LOGS ────────────────────────────────────────────────────
+const eventLog  = document.getElementById('event-log');
+const agentLog  = document.getElementById('agent-log');
+
+function addLog(container, type, msg) {
+  const el = document.createElement('div');
+  el.className = `feed-entry ${type}`;
+  const t = new Date();
+  el.innerHTML = `<span class="feed-time">${t.getHours().toString().padStart(2,'0')}:${t.getMinutes().toString().padStart(2,'0')}:${t.getSeconds().toString().padStart(2,'0')}</span>${msg}`;
+  container.insertBefore(el, container.firstChild);
+  while (container.children.length > 7) container.removeChild(container.lastChild);
+}
+
+// ── SIMULATION ───────────────────────────────────────────────────
+let eventsPerMin = 0, alertCount = 0, evtCounter = 0;
+
+const sensorEvents = [
+  [()=>addLog(eventLog,'info','📡 Crowd density: Concourse N = 88% — threshold breached'), ()=>addLog(agentLog,'warn','👥 CrowdFlow Agent: Predicting 94% in 8min → opening Gate C auxiliary'), 'warn', 2],
+  [()=>addLog(eventLog,'info','🎥 CV Service: Anomaly detected Gate B cam — flow bottleneck'), ()=>addLog(agentLog,'info','👁️ Claude Vision called: "Crowd compression forming near turnstile 4"'), 'info', 0],
+  [()=>addLog(eventLog,'warn','⏱️ Queue depth: Section 110 Food — 14 people (12 min wait)'), ()=>addLog(agentLog,'warn','⏱️ WaitTime Agent: Redeploying 2 staff from Sec 210 → Sec 110'), 'warn', 1],
+  [()=>addLog(eventLog,'ok','🅿️ Parking Lot A: 92% full — overflow triggered'), ()=>addLog(agentLog,'ok','🚌 Parking Agent: Opening Lot D overflow + dispatching 3 extra shuttles'), 'ok', 0],
+  [()=>addLog(eventLog,'info','🌡️ Env sensor Concourse S: CO₂ = 1,240ppm — elevated'), ()=>addLog(agentLog,'info','🔧 Infrastructure Agent: Increasing HVAC flow Zone S-2 by 20%'), 'info', 0],
+  [()=>addLog(eventLog,'ok','🚪 Turnstile C4: Exit surge detected — post-half-time flow'), ()=>addLog(agentLog,'ok','👥 CrowdFlow Agent: Staggering section exits, updating signage'), 'ok', 0],
+  [()=>addLog(eventLog,'info','📊 Analytics: Revenue pace $4.2M — 12% above forecast'), ()=>addLog(agentLog,'info','📊 Analytics Agent: Updated operations dashboard KPIs'), 'info', 0],
+  [()=>addLog(eventLog,'warn','🚨 Medical alert: Section 114, Row G — staff notified'), ()=>addLog(agentLog,'crit','🚨 Emergency Agent (Opus): Dispatching medic + AED to Section 114'), 'crit', 1],
+  [()=>addLog(eventLog,'ok','📱 Attendee query: "Where is the nearest accessible restroom?"'), ()=>addLog(agentLog,'ok','📱 Attendee Agent: Streaming directions to Gate B wheelchair restroom'), 'ok', 0],
+  [()=>addLog(eventLog,'info','⚡ Power draw: Zone C-Upper = 98% capacity'), ()=>addLog(agentLog,'warn','🔧 Infrastructure Agent: Load balancing — shifting non-critical circuits'), 'warn', 1],
+];
+
+let si = 0;
+function runSimEvent() {
+  const [evFn, agFn, lvl, alerts] = sensorEvents[si % sensorEvents.length];
+  evFn(); agFn();
+  eventsPerMin += 3 + Math.floor(Math.random() * 5);
+  alertCount += alerts;
+  document.getElementById('stat-events').textContent = eventsPerMin;
+  document.getElementById('stat-alerts').textContent = alertCount;
+  si++;
+  setTimeout(() => { eventsPerMin = Math.max(0, eventsPerMin - 2); document.getElementById('stat-events').textContent = eventsPerMin; }, 3000);
+  if (alerts) setTimeout(() => { alertCount = Math.max(0, alertCount - alerts); document.getElementById('stat-alerts').textContent = alertCount; }, 15000);
+}
+
+// Zone fluctuation
+function fluctuateZones() {
+  zones.forEach((z, i) => {
+    const isQueue = z.occ === 0;
+    if (isQueue) {
+      z.wait = Math.max(0, Math.min(20, z.wait + (Math.random() > .5 ? 1 : -1)));
+    } else {
+      z.occ = Math.max(30, Math.min(99, z.occ + Math.round((Math.random() - .48) * 3)));
+    }
+    const pct = isQueue ? Math.min(z.wait * 8, 100) : z.occ;
+    const color = isQueue ? (z.wait > 10 ? '#ff4444' : z.wait > 5 ? '#ffa000' : '#00c864') : occColor(z.occ);
+    const bar = document.getElementById(`zbar-${i}`);
+    const stat = document.getElementById(`zstat-${i}`);
+    const lvl = document.getElementById(`zlvl-${i}`);
+    if (bar) { bar.style.width = pct + '%'; bar.style.background = color; }
+    if (stat) stat.textContent = isQueue ? `Wait: ${z.wait}m` : `Occ: ${z.occ}%`;
+    if (lvl) { lvl.textContent = pct > 85 ? 'CRITICAL' : pct > 70 ? 'ELEVATED' : 'NORMAL'; lvl.style.color = color; }
+  });
+}
+
+// Attendee count
+function fluctuateAttendees() {
+  const base = 72441, delta = Math.round((Math.random() - .5) * 20);
+  window._att = (window._att || base) + delta;
+  document.getElementById('stat-attendees').textContent = window._att.toLocaleString();
+}
+
+setInterval(runSimEvent, 3200);
+setInterval(fluctuateZones, 1800);
+setInterval(fluctuateAttendees, 2500);
+
+// Kick off immediately
+setTimeout(runSimEvent, 600);
+setTimeout(runSimEvent, 1400);
+
+// ── CANVAS PARTICLES ─────────────────────────────────────────────
+const canvas = document.getElementById('flowCanvas');
+const ctx = canvas.getContext('2d');
+
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+// Gather node center positions
+function nodeCenter(id) {
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+}
+
+const flowPaths = [
+  // Sensors → MQTT
+  { from: 's-crowd', to: 'mqtt', color: '#00b4ff' },
+  { from: 's-queue', to: 'mqtt', color: '#00b4ff' },
+  { from: 's-turnstile', to: 'mqtt', color: '#00b4ff' },
+  { from: 's-parking', to: 'mqtt', color: '#00b4ff' },
+  // Cameras → CV
+  { from: 'c-gate', to: 'cv', color: '#5090ff' },
+  { from: 'c-concourse', to: 'cv', color: '#5090ff' },
+  { from: 'c-bowl', to: 'cv', color: '#5090ff' },
+  // MQTT + CV → Ingest
+  { from: 'mqtt', to: 'ingest', color: '#00dca0' },
+  { from: 'cv', to: 'ingest', color: '#00dca0' },
+  // Ingest → Redis + EventBus
+  { from: 'ingest', to: 'redis', color: '#c46aff' },
+  { from: 'ingest', to: 'eventbus', color: '#c46aff' },
+  // EventBus → Orchestrator
+  { from: 'eventbus', to: 'orchestrator', color: '#ff9500' },
+  // Orchestrator → Agents
+  { from: 'orchestrator', to: 'a-crowd', color: '#ffaa44' },
+  { from: 'orchestrator', to: 'a-wait', color: '#ffaa44' },
+  { from: 'orchestrator', to: 'a-staff', color: '#ffaa44' },
+  { from: 'orchestrator', to: 'a-parking', color: '#ffaa44' },
+  { from: 'orchestrator', to: 'a-emergency', color: '#ff4444' },
+  { from: 'orchestrator', to: 'a-attendee', color: '#ffaa44' },
+  { from: 'orchestrator', to: 'a-infra', color: '#ffaa44' },
+  { from: 'orchestrator', to: 'a-analytics', color: '#ffaa44' },
+];
+
+// Particles
+const particles = [];
+function spawnParticle() {
+  const path = flowPaths[Math.floor(Math.random() * flowPaths.length)];
+  const a = nodeCenter(path.from);
+  const b = nodeCenter(path.to);
+  if (!a || !b) return;
+  particles.push({ ax: a.x, ay: a.y, bx: b.x, by: b.y, t: 0, speed: .008 + Math.random() * .012, color: path.color, size: 2 + Math.random() * 2 });
+}
+
+setInterval(spawnParticle, 120);
+
+function drawFrame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.t += p.speed;
+    if (p.t >= 1) { particles.splice(i, 1); continue; }
+
+    // Bezier midpoint
+    const mx = (p.ax + p.bx) / 2 + (Math.random() > .5 ? 20 : -20);
+    const my = (p.ay + p.by) / 2;
+    const t = p.t;
+    const x = (1-t)*(1-t)*p.ax + 2*(1-t)*t*mx + t*t*p.bx;
+    const y = (1-t)*(1-t)*p.ay + 2*(1-t)*t*my + t*t*p.by;
+
+    // Glow
+    ctx.beginPath();
+    ctx.arc(x, y, p.size * 2, 0, Math.PI * 2);
+    ctx.fillStyle = p.color + '22';
+    ctx.fill();
+
+    // Core dot
+    ctx.beginPath();
+    ctx.arc(x, y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+
+    // Trail
+    const tx2 = (1-Math.max(t-.05,0))*(1-Math.max(t-.05,0))*p.ax + 2*(1-Math.max(t-.05,0))*Math.max(t-.05,0)*mx + Math.max(t-.05,0)*Math.max(t-.05,0)*p.bx;
+    const ty2 = (1-Math.max(t-.05,0))*(1-Math.max(t-.05,0))*p.ay + 2*(1-Math.max(t-.05,0))*Math.max(t-.05,0)*my + Math.max(t-.05,0)*Math.max(t-.05,0)*p.by;
+    const grad = ctx.createLinearGradient(tx2, ty2, x, y);
+    grad.addColorStop(0, p.color + '00');
+    grad.addColorStop(1, p.color + 'aa');
+    ctx.beginPath();
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = p.size * .8;
+    ctx.moveTo(tx2, ty2);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
+  requestAnimationFrame(drawFrame);
+}
+drawFrame();
+</script>
+</body>
+</html>
