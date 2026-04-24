@@ -616,9 +616,7 @@ function drawField() {
   // Field surface
   const fw=FIELD_W/2, fh=FIELD_H/2;
   sc.fillStyle = '#0e3320';
-  sc.beginPath();
-  sc.roundRect(CX-fw, CY-fh, FIELD_W, FIELD_H, 8);
-  sc.fill();
+  sc.fillRect(CX-fw, CY-fh, FIELD_W, FIELD_H);
 
   // Field stripes
   for(let i=0;i<5;i++){
@@ -928,8 +926,10 @@ function checkAndFireDecisions(){
   document.getElementById('cs-alerts').textContent=alertCount;
   document.getElementById('kpi-alerts').textContent=alertCount;
 
-  if(critZones.length===0)return;
-  const {zone,pct}=critZones[Math.floor(Math.random()*critZones.length)];
+  // Always fire a decision — use highest-density zone if none are critical
+  const allZones=Object.entries(zoneDensity).map(([zone,d])=>({zone,pct:Math.round(d*100)}));
+  const pool=critZones.length>0?critZones:allZones.sort((a,b)=>b.pct-a.pct).slice(0,3);
+  const {zone,pct}=pool[Math.floor(Math.random()*pool.length)];
 
   // Pick action type
   const roll=Math.random();
