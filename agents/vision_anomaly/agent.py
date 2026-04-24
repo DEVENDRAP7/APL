@@ -1,5 +1,5 @@
 import json
-from core.client import get_client, build_cached_system
+from core.client import get_client, build_cached_system, is_mock_mode
 from agents.vision_anomaly.system_prompt import SYSTEM_PROMPT
 from data.models import CameraFrame
 
@@ -12,6 +12,15 @@ class VisionAnomalyAgent:
         self.client = get_client()
 
     async def analyse(self, frame: CameraFrame) -> dict:
+        if is_mock_mode():
+            return {
+                "anomaly_detected": False,
+                "confidence": 0.12,
+                "description": "Normal crowd distribution. No anomalies detected.",
+                "recommended_action": "Continue monitoring.",
+                "demo_mode": True,
+            }
+
         system = build_cached_system(SYSTEM_PROMPT)
         response = self.client.messages.create(
             model=self.model,

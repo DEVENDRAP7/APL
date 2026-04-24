@@ -1,6 +1,19 @@
 from typing import Callable
-from core.client import get_client
+from core.client import get_client, is_mock_mode
 from data.models import AgentResponse
+
+_MOCK_RESPONSES = {
+    "attendee_experience": (
+        "Welcome to the venue! Zone A and B have moderate crowd density right now. "
+        "I recommend using Gate 3 for the quickest entry. Food stalls on Level 2 have shorter queues. "
+        "Enjoy the event! [Demo mode — connect API key for live AI responses]"
+    ),
+    "emergency_response": (
+        "Situation assessed. Recommend standard crowd flow protocol: activate secondary exits, "
+        "deploy stewards to Zone C, monitor density sensors. No immediate evacuation required. "
+        "[Demo mode — connect API key for live AI responses]"
+    ),
+}
 
 
 class BaseAgent:
@@ -20,6 +33,17 @@ class BaseAgent:
     ) -> AgentResponse:
         tools_called = []
         actions_taken = []
+
+        if is_mock_mode():
+            return AgentResponse(
+                agent_name=self.name,
+                response_text=_MOCK_RESPONSES.get(
+                    self.name,
+                    "System operating in demo mode. Real AI responses require an API key.",
+                ),
+                tools_called=[],
+                actions_taken=[],
+            )
 
         while True:
             response = self.client.messages.create(

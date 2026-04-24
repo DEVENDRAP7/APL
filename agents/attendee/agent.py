@@ -1,10 +1,9 @@
 from agents.base_agent import BaseAgent
 from agents.attendee.system_prompt import SYSTEM_PROMPT
 from agents.attendee.tools import TOOLS, HANDLERS
-from core.client import build_cached_system
+from core.client import build_cached_system, is_mock_mode
 from core.state_store import state_store
 from data.models import AttendeeSession, AgentResponse
-import anthropic
 
 
 class AttendeeExperienceAgent(BaseAgent):
@@ -36,6 +35,18 @@ class AttendeeExperienceAgent(BaseAgent):
     async def chat_stream(self, session: AttendeeSession, user_message: str):
         """Yields text chunks for WebSocket streaming."""
         session.conversation_history.append({"role": "user", "content": user_message})
+
+        if is_mock_mode():
+            mock = (
+                "I'm here to help! In demo mode I can tell you: Zone A is at 65% capacity, "
+                "Gate 3 is your fastest entry, and food vendors on Level 2 have the shortest queues. "
+                "[Live AI responses require an API key]"
+            )
+            for word in mock.split(" "):
+                yield word + " "
+            session.conversation_history.append({"role": "assistant", "content": mock})
+            return
+
         venue_state = state_store.get_state()
         dynamic = f"\nVenue mode: {venue_state.operational_mode}."
         system = build_cached_system(SYSTEM_PROMPT, dynamic)
