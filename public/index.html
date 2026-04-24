@@ -52,6 +52,15 @@ section{padding:80px 40px;max-width:1300px;margin:0 auto}
 .problem-card h3{font-size:.95rem;font-weight:700;margin-bottom:8px}
 .problem-card p{font-size:.82rem;color:var(--muted);line-height:1.6}
 
+/* ZONE CARDS */
+.zones-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.zone-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;transition:border-color .3s}
+.zone-card h4{font-size:.78rem;color:var(--muted);margin-bottom:10px;font-weight:500}
+.z-bar-wrap{height:7px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.z-bar{height:100%;border-radius:4px;transition:width .8s ease,background .5s}
+.z-stats{display:flex;justify-content:space-between;font-size:.65rem}
+.z-level{font-weight:600}
+
 /* ─── STADIUM SECTION ─── */
 #stadium-view{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:60px 40px}
 .stadium-section-inner{max-width:1300px;margin:0 auto}
@@ -242,18 +251,8 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
       </div>
     </div>
 
-    <div class="stadium-layout">
-      <!-- Canvas -->
-      <div class="stadium-canvas-wrap">
-        <canvas id="stadium-canvas" width="760" height="490"></canvas>
-        <div class="stadium-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Normal (&lt;70%)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#ff9500"></div>Elevated (70–85%)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Critical (&gt;85%)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#00aaff;border-radius:50%"></div>Camera</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#a855f7;border-radius:50%"></div>AI Routing</div>
-        </div>
-      </div>
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
+      <div class="zones-grid" id="zones-grid"></div>
 
       <!-- Crowd Management Panel -->
       <div class="crowd-panel">
@@ -516,127 +515,44 @@ function drawParticles(){
 }
 drawParticles();
 
-// ── STADIUM CANVAS ──────────────────────────────────────────────────────────
-const sCvs = document.getElementById('stadium-canvas');
-const sc = sCvs.getContext('2d');
-const CX = 380, CY = 248;
-const FIELD_W = 220, FIELD_H = 118;
-const INNER_RX = 148, INNER_RY = 92;    // seating inner edge
-const OUTER_RX = 285, OUTER_RY = 178;   // seating outer edge
-const WALL_RX  = 330, WALL_RY  = 210;   // stadium outer wall
-
-// 12 sections × 30° each, starting at -90° (top)
-const SEC_NAMES = [
-  'Gate\nNorth','Sec\n101–110','Concourse\nNE',
-  'East\nUpper','Sec\n111–120','Food\nNorth',
-  'Gate\nSouth','Sec\n201–210','Concourse\nSW',
-  'West\nLower','Sec\n301–310','Food\nSouth'
-];
-const SEC_ZONE = [
-  'gate_north','seating_ne','concourse_north',
-  'seating_e','seating_se','food_north',
-  'gate_south','seating_sw','concourse_south',
-  'seating_w','seating_nw','food_south'
-];
-
-// Zone density state
+// ── ZONE CARDS (built from SCENARIOS zone keys) ──────────────────────────────
+const ZONE_LABELS = {
+  gate_north:'Gate North',concourse_north:'Concourse North',
+  seating_ne:'Seating NE',seating_e:'East Stand',seating_se:'Seating SE',
+  food_north:'Food Court North',gate_south:'Gate South',
+  concourse_south:'Concourse South',seating_sw:'Seating SW',
+  seating_w:'West Stand',seating_nw:'Seating NW',food_south:'Food Court South'
+};
+const SEC_ZONE = Object.keys(ZONE_LABELS);
 const zoneDensity = {};
-SEC_ZONE.forEach(z => { zoneDensity[z] = 0.45 + Math.random()*0.2; });
+SEC_ZONE.forEach(z => { zoneDensity[z] = 0.45 + Math.random()*0.15; });
 
-// Particles per section
-const sectionParticles = Array.from({length:12}, (_, i) => {
-  const particles = [];
-  const startA = (-90 + i*30) * Math.PI/180;
-  const endA   = startA + 30 * Math.PI/180;
-  for (let k=0; k<35; k++) {
-    const a = startA + Math.random()*(endA - startA);
-    const t = 0.1 + Math.random()*0.85;
-    particles.push({ a, t, va:(Math.random()-.5)*0.003, vt:(Math.random()-.5)*0.005 });
-  }
-  return particles;
+// Build zone cards
+const zg = document.getElementById('zones-grid');
+SEC_ZONE.forEach(zid => {
+  const card = document.createElement('div');
+  card.className = 'zone-card'; card.id = 'zc-' + zid;
+  card.innerHTML = `<h4>${ZONE_LABELS[zid]}</h4><div class="z-bar-wrap"><div class="z-bar" id="zb-${zid}" style="width:45%;background:var(--green)"></div></div><div class="z-stats"><span id="zv-${zid}">Occ: 45%</span><span class="z-level" id="zl-${zid}" style="color:var(--green)">NORMAL</span></div>`;
+  zg.appendChild(card);
 });
 
-// Active routing arrows: [{from, to, alpha}]
-let routingArrows = [];
-// Alert pulses: [{sec, phase}]
-let alertPulses = [];
-// Camera blink phases
-const cameraPhase = Array.from({length:8}, ()=>Math.random()*Math.PI*2);
-
-function densityColor(pct, alpha=1) {
-  if (pct > 85) return `rgba(255,60,60,${alpha})`;
-  if (pct > 70) return `rgba(255,145,0,${alpha})`;
-  if (pct > 50) return `rgba(255,210,30,${alpha})`;
-  return `rgba(40,195,85,${alpha})`;
+function updateZoneCards() {
+  SEC_ZONE.forEach(zid => {
+    const pct = Math.round((zoneDensity[zid]||0.5)*100);
+    const color = pct>85?'var(--red)':pct>70?'var(--orange)':'var(--green)';
+    const label = pct>85?'CRITICAL':pct>70?'ELEVATED':'NORMAL';
+    const bar = document.getElementById('zb-'+zid);
+    const val = document.getElementById('zv-'+zid);
+    const lbl = document.getElementById('zl-'+zid);
+    const card = document.getElementById('zc-'+zid);
+    if(bar){bar.style.width=pct+'%';bar.style.background=color;}
+    if(val)val.textContent=`Occ: ${pct}%`;
+    if(lbl){lbl.textContent=label;lbl.style.color=color;}
+    if(card)card.style.borderColor=pct>85?'rgba(255,68,68,.4)':pct>70?'rgba(255,149,0,.3)':'var(--border)';
+  });
 }
 
-function sectionFill(pct) {
-  // Dark base with density glow
-  const t = pct/100;
-  if (pct > 85) return `rgba(80,10,10,${0.5+t*0.4})`;
-  if (pct > 70) return `rgba(70,38,0,${0.45+t*0.3})`;
-  if (pct > 50) return `rgba(55,55,5,${0.4+t*0.25})`;
-  return `rgba(8,40,18,${0.4+t*0.2})`;
-}
-
-function drawSection(idx, pct) {
-  const startA = (-90 + idx*30) * Math.PI/180;
-  const endA = startA + 30*Math.PI/180;
-  sc.beginPath();
-  sc.ellipse(CX, CY, OUTER_RX, OUTER_RY, 0, startA, endA, false);
-  sc.ellipse(CX, CY, INNER_RX, INNER_RY, 0, endA, startA, true);
-  sc.closePath();
-  sc.fillStyle = sectionFill(pct);
-  sc.fill();
-  // Density edge glow
-  sc.strokeStyle = densityColor(pct, pct > 70 ? 0.6 : 0.25);
-  sc.lineWidth = 1.2;
-  sc.stroke();
-  // Seat rows: concentric arcs inside section
-  for (let r=0; r<4; r++) {
-    const t = (r+1)/5;
-    const rx = INNER_RX + t*(OUTER_RX-INNER_RX);
-    const ry = INNER_RY + t*(OUTER_RY-INNER_RY);
-    sc.beginPath();
-    sc.ellipse(CX, CY, rx, ry, 0, startA+0.02, endA-0.02);
-    sc.strokeStyle = `rgba(255,255,255,0.04)`;
-    sc.lineWidth = 0.8;
-    sc.stroke();
-  }
-}
-
-function drawField() {
-  // Field shadow
-  const grd = sc.createRadialGradient(CX,CY,10,CX,CY,INNER_RX);
-  grd.addColorStop(0,'rgba(0,180,60,.12)');
-  grd.addColorStop(1,'rgba(0,0,0,0)');
-  sc.fillStyle = grd;
-  sc.beginPath(); sc.ellipse(CX,CY,INNER_RX,INNER_RY,0,0,Math.PI*2); sc.fill();
-
-  // Field surface
-  const fw=FIELD_W/2, fh=FIELD_H/2;
-  sc.fillStyle = '#0e3320';
-  sc.fillRect(CX-fw, CY-fh, FIELD_W, FIELD_H);
-
-  // Field stripes
-  for(let i=0;i<5;i++){
-    sc.fillStyle = i%2===0 ? 'rgba(255,255,255,.025)' : 'transparent';
-    if(i%2===0){ sc.fillRect(CX-fw + i*(FIELD_W/5), CY-fh, FIELD_W/5, FIELD_H); }
-  }
-
-  // Field markings
-  sc.strokeStyle = 'rgba(255,255,255,0.2)';
-  sc.lineWidth = 1;
-  // Outline
-  sc.strokeRect(CX-fw+8, CY-fh+8, FIELD_W-16, FIELD_H-16);
-  // Center line
-  sc.beginPath(); sc.moveTo(CX, CY-fh+8); sc.lineTo(CX, CY+fh-8); sc.stroke();
-  // Center circle
-  sc.beginPath(); sc.arc(CX, CY, 22, 0, Math.PI*2); sc.stroke();
-  // Center dot
-  sc.beginPath(); sc.arc(CX, CY, 2.5, 0, Math.PI*2);
-  sc.fillStyle = 'rgba(255,255,255,0.4)'; sc.fill();
-  // Penalty boxes
+function _noop(){
   sc.strokeRect(CX-fw+8, CY-32, 42, 64);
   sc.strokeRect(CX+fw-50, CY-32, 42, 64);
 
@@ -659,196 +575,6 @@ function drawCameras(t) {
     // Camera body
     sc.beginPath(); sc.arc(x,y,5,0,Math.PI*2);
     sc.fillStyle = blink ? 'rgba(0,170,255,0.9)' : 'rgba(0,170,255,0.3)';
-    sc.fill();
-    sc.strokeStyle = 'rgba(0,170,255,0.5)'; sc.lineWidth=1; sc.stroke();
-    // Blink glow
-    if(blink){
-      const grd = sc.createRadialGradient(x,y,0,x,y,14);
-      grd.addColorStop(0,'rgba(0,170,255,0.3)'); grd.addColorStop(1,'rgba(0,170,255,0)');
-      sc.beginPath(); sc.arc(x,y,14,0,Math.PI*2); sc.fillStyle=grd; sc.fill();
-    }
-  }
-}
-
-function drawGateLabels() {
-  const gates = [
-    {a:-Math.PI/2, label:'GATE N', color:'#00aaff'},
-    {a:0,          label:'GATE E', color:'#00dca0'},
-    {a:Math.PI/2,  label:'GATE S', color:'#00aaff'},
-    {a:Math.PI,    label:'GATE W', color:'#00dca0'},
-  ];
-  gates.forEach(g => {
-    const x = CX + (WALL_RX+14)*Math.cos(g.a);
-    const y = CY + (WALL_RY+14)*Math.sin(g.a);
-    sc.font = 'bold 9px Segoe UI';
-    sc.textAlign = 'center';
-    sc.textBaseline = 'middle';
-    sc.fillStyle = g.color;
-    sc.fillText(g.label, x, y);
-  });
-}
-
-function drawSectionLabel(idx, pct) {
-  const midA = (-90 + idx*30 + 15) * Math.PI/180;
-  const r = (INNER_RX + OUTER_RX)/2;
-  const ry2 = (INNER_RY + OUTER_RY)/2;
-  const x = CX + r*Math.cos(midA);
-  const y = CY + ry2*Math.sin(midA);
-  sc.save();
-  sc.translate(x,y);
-  sc.rotate(midA + Math.PI/2);
-  sc.font = `bold ${pct>70?'8.5':'7.5'}px Segoe UI`;
-  sc.textAlign = 'center';
-  sc.textBaseline = 'middle';
-  sc.fillStyle = pct>85?'#ff9999':pct>70?'#ffd080':'rgba(255,255,255,0.55)';
-  const lines = SEC_NAMES[idx].split('\n');
-  sc.fillText(lines[0], 0, lines[1]?-5:0);
-  if(lines[1]){sc.font='6px Segoe UI';sc.fillStyle='rgba(255,255,255,0.35)';sc.fillText(lines[1],0,5);}
-  sc.restore();
-}
-
-function drawAlertPulses(t) {
-  for(let i=0;i<12;i++){
-    const zone = SEC_ZONE[i];
-    const pct = (zoneDensity[zone]||0.5)*100;
-    if(pct>82){
-      const midA=(-90+i*30+15)*Math.PI/180;
-      const r=(INNER_RX+OUTER_RX)/2;
-      const ry2=(INNER_RY+OUTER_RY)/2;
-      const x=CX+r*Math.cos(midA), y=CY+ry2*Math.sin(midA);
-      const phase=Math.sin(t*0.004+i)*0.5+0.5;
-      const grd=sc.createRadialGradient(x,y,0,x,y,28+phase*12);
-      grd.addColorStop(0,`rgba(255,60,60,${0.25+phase*0.2})`);
-      grd.addColorStop(1,'rgba(255,60,60,0)');
-      sc.beginPath();sc.arc(x,y,28+phase*12,0,Math.PI*2);sc.fillStyle=grd;sc.fill();
-    }
-  }
-}
-
-function drawRoutingArrows() {
-  routingArrows = routingArrows.filter(ar=>ar.alpha>0.05);
-  routingArrows.forEach(ar=>{
-    ar.alpha *= 0.985;
-    const sa=(-90+ar.from*30+15)*Math.PI/180;
-    const ea=(-90+ar.to*30+15)*Math.PI/180;
-    const r=(INNER_RX+OUTER_RX)/2, ry2=(INNER_RY+OUTER_RY)/2;
-    const x1=CX+r*Math.cos(sa), y1=CY+ry2*Math.sin(sa);
-    const x2=CX+r*Math.cos(ea), y2=CY+ry2*Math.sin(ea);
-    const mx=(x1+x2)/2*(0.85), my=(y1+y2)/2*(0.85);
-    sc.beginPath();
-    sc.moveTo(x1,y1);
-    sc.quadraticCurveTo(CX+(mx-CX)*0.6, CY+(my-CY)*0.6, x2,y2);
-    sc.strokeStyle=`rgba(168,85,247,${ar.alpha*0.8})`;
-    sc.lineWidth=1.8;
-    sc.setLineDash([4,3]);
-    sc.stroke();
-    sc.setLineDash([]);
-    // Arrowhead
-    const angle=Math.atan2(y2-(CY+(my-CY)*0.6*0.5), x2-(CX+(mx-CX)*0.6*0.5));
-    sc.beginPath();
-    sc.moveTo(x2,y2);
-    sc.lineTo(x2-8*Math.cos(angle-0.4),y2-8*Math.sin(angle-0.4));
-    sc.lineTo(x2-8*Math.cos(angle+0.4),y2-8*Math.sin(angle+0.4));
-    sc.closePath();
-    sc.fillStyle=`rgba(168,85,247,${ar.alpha*0.9})`;
-    sc.fill();
-  });
-}
-
-function drawCrowdParticles(t) {
-  for(let i=0;i<12;i++){
-    const zone=SEC_ZONE[i];
-    const pct=(zoneDensity[zone]||0.5)*100;
-    const activeCount=Math.round((pct/100)*28);
-    const pts=sectionParticles[i];
-    const startA=(-90+i*30)*Math.PI/180;
-    const endA=startA+30*Math.PI/180;
-    for(let k=0;k<activeCount;k++){
-      const p=pts[k];
-      p.a+=p.va; p.t+=p.vt;
-      if(p.a<startA||p.a>endA){p.va*=-1;p.a=Math.max(startA,Math.min(endA,p.a));}
-      if(p.t<0.05||p.t>0.95){p.vt*=-1;p.t=Math.max(0.05,Math.min(0.95,p.t));}
-      const rx=INNER_RX+p.t*(OUTER_RX-INNER_RX);
-      const ry2=INNER_RY+p.t*(OUTER_RY-INNER_RY);
-      const px=CX+rx*Math.cos(p.a), py=CY+ry2*Math.sin(p.a);
-      const brightness=pct>85?0.8:pct>70?0.65:0.45;
-      sc.beginPath(); sc.arc(px,py,1.2,0,Math.PI*2);
-      sc.fillStyle=densityColor(pct, brightness);
-      sc.fill();
-    }
-  }
-}
-
-function drawStadiumOutline() {
-  // Outer wall
-  const wallGrd=sc.createLinearGradient(CX-WALL_RX,CY,CX+WALL_RX,CY);
-  wallGrd.addColorStop(0,'rgba(0,100,180,0.08)');
-  wallGrd.addColorStop(0.5,'rgba(0,150,255,0.12)');
-  wallGrd.addColorStop(1,'rgba(0,100,180,0.08)');
-  sc.beginPath(); sc.ellipse(CX,CY,WALL_RX,WALL_RY,0,0,Math.PI*2);
-  sc.strokeStyle='rgba(0,150,255,0.35)'; sc.lineWidth=2.5; sc.stroke();
-  sc.fillStyle=wallGrd; sc.fill();
-
-  // Inner concourse ring
-  sc.beginPath(); sc.ellipse(CX,CY,INNER_RX,INNER_RY,0,0,Math.PI*2);
-  sc.fillStyle='rgba(8,16,32,0.85)'; sc.fill();
-  sc.strokeStyle='rgba(255,255,255,0.08)'; sc.lineWidth=1; sc.stroke();
-}
-
-function drawScoreBoard() {
-  sc.fillStyle='rgba(0,0,0,0.7)';
-  sc.fillRect(CX-55,12,110,26);
-  sc.strokeStyle='rgba(0,170,255,0.4)'; sc.lineWidth=1;
-  sc.strokeRect(CX-55,12,110,26);
-  sc.font='bold 10px monospace'; sc.textAlign='center'; sc.textBaseline='middle';
-  sc.fillStyle='#00aaff';
-  const sc2=SCENARIOS[scIdx].name;
-  sc.fillText(`▶ ${sc2.toUpperCase()}  |  ${Math.round(totalDensity)}% AVG`, CX, 25);
-}
-
-let totalDensity=55;
-let animT=0;
-
-function renderStadium() {
-  animT++;
-  sc.clearRect(0,0,sCvs.width,sCvs.height);
-
-  // Background
-  const bgGrd=sc.createRadialGradient(CX,CY,0,CX,CY,WALL_RX+30);
-  bgGrd.addColorStop(0,'#0a1428'); bgGrd.addColorStop(1,'#060c18');
-  sc.fillStyle=bgGrd; sc.fillRect(0,0,sCvs.width,sCvs.height);
-
-  // Draw sections
-  let total=0;
-  for(let i=0;i<12;i++){
-    const zone=SEC_ZONE[i];
-    const pct=(zoneDensity[zone]||0.5)*100;
-    total+=pct;
-    drawSection(i,pct);
-  }
-  totalDensity=total/12;
-
-  drawAlertPulses(animT);
-  drawRoutingArrows();
-  drawStadiumOutline();
-  drawCrowdParticles(animT);
-  drawField();
-  drawCameras(animT);
-
-  // Section labels
-  for(let i=0;i<12;i++){
-    const zone=SEC_ZONE[i];
-    const pct=(zoneDensity[zone]||0.5)*100;
-    drawSectionLabel(i,pct);
-  }
-  drawGateLabels();
-  drawScoreBoard();
-
-  requestAnimationFrame(renderStadium);
-}
-renderStadium();
-
-// ── SCENARIO SIMULATION ──────────────────────────────────────────────────────
 const SCENARIOS = [
   {
     name:'Normal',
@@ -877,6 +603,7 @@ function updateZoneDensities(){
   });
   document.getElementById('scenario-name').textContent=sc.name.toUpperCase();
   document.getElementById('kpi-mode').textContent=sc.name.toUpperCase();
+  updateZoneCards();
   tick++;
   if(tick>=30){tick=0;scIdx=(scIdx+1)%SCENARIOS.length;}
 }
