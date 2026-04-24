@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIS — System Architecture</title>
+<style>
+:root{
+  --bg:#060b14;--bg2:#0d1626;--bg3:#111e35;
+  --blue:#00aaff;--teal:#00dca0;--purple:#a855f7;
+  --orange:#ff9500;--red:#ff4444;--green:#22c55e;
+  --yellow:#fbbf24;--text:#e0f0ff;--muted:#7a9ab5;
+  --border:rgba(255,255,255,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden;min-height:100vh}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.nav-back{display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-size:.82rem;transition:color .2s}
+.nav-back:hover{color:#fff}
+.nav-title{font-size:.9rem;font-weight:700;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.live-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:var(--green);font-size:.68rem;padding:4px 10px;border-radius:20px;letter-spacing:1px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* HEADER */
+.page-header{text-align:center;padding:80px 20px 24px;position:relative}
+.page-header h1{font-size:clamp(1.5rem,4vw,2.6rem);font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,var(--blue),var(--purple),var(--teal));background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradShift 5s linear infinite}
+.page-header p{color:var(--muted);font-size:.9rem;margin-top:8px;letter-spacing:.5px}
+@keyframes gradShift{0%{background-position:0%}100%{background-position:200%}}
+
+/* STATS BAR */
+.stats-bar{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;padding:0 20px 32px}
+.stat-chip{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 20px;text-align:center;min-width:110px}
+.stat-chip .val{font-size:1.4rem;font-weight:800}
+.stat-chip .lbl{font-size:.6rem;color:var(--muted);letter-spacing:1px;margin-top:2px;text-transform:uppercase}
+
+/* ARCHITECTURE WRAPPER */
+.arch{max-width:1400px;margin:0 auto;padding:0 24px 80px;display:flex;flex-direction:column;gap:0}
+
+/* LAYER */
+.layer{border-radius:16px;padding:20px 24px 24px;margin-bottom:0;position:relative;transition:box-shadow .3s}
+.layer:hover{box-shadow:0 0 40px rgba(0,0,0,.3)}
+.layer-title{font-size:.65rem;letter-spacing:3px;font-weight:700;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.layer-title::after{content:'';flex:1;height:1px;background:currentColor;opacity:.15}
+.layer-tag{font-size:.6rem;padding:2px 8px;border-radius:4px;opacity:.7;font-weight:600;margin-left:auto}
+
+.layer-physical{background:rgba(0,60,100,.18);border:1px solid rgba(0,180,255,.14)}
+.layer-physical .layer-title{color:var(--blue)}
+.layer-physical .layer-tag{background:rgba(0,170,255,.15);color:var(--blue)}
+
+.layer-ingestion{background:rgba(0,80,60,.18);border:1px solid rgba(0,220,160,.14)}
+.layer-ingestion .layer-title{color:var(--teal)}
+.layer-ingestion .layer-tag{background:rgba(0,220,160,.15);color:var(--teal)}
+
+.layer-core{background:rgba(80,0,120,.18);border:1px solid rgba(168,85,247,.15)}
+.layer-core .layer-title{color:var(--purple)}
+.layer-core .layer-tag{background:rgba(168,85,247,.15);color:var(--purple)}
+
+.layer-decision{background:rgba(20,20,20,.4);border:1px solid rgba(255,255,255,.1)}
+.layer-decision .layer-title{color:#fff}
+
+.layer-api{background:rgba(0,60,80,.18);border:1px solid rgba(0,170,255,.14)}
+.layer-api .layer-title{color:var(--blue)}
+
+.layer-outputs{background:rgba(0,80,40,.15);border:1px solid rgba(34,197,94,.12)}
+.layer-outputs .layer-title{color:var(--green)}
+
+/* NODES */
+.node-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.node{border-radius:12px;padding:12px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;min-width:115px;max-width:160px;text-align:center}
+.node:hover{transform:translateY(-3px)}
+.node-icon{font-size:1.5rem;line-height:1}
+.node-name{font-size:.72rem;font-weight:700;line-height:1.3}
+.node-desc{font-size:.6rem;color:var(--muted);line-height:1.4}
+.node-file{font-size:.55rem;font-family:monospace;color:#4a7a9a;margin-top:2px}
+.node-pulse{position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;animation:pulseGlow 2s infinite}
+@keyframes pulseGlow{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
+
+.node-sensor{background:rgba(0,140,220,.12);border:1px solid rgba(0,180,255,.25)}
+.node-sensor .node-pulse{background:var(--blue);box-shadow:0 0 6px var(--blue)}
+.node-sensor:hover{box-shadow:0 0 20px rgba(0,180,255,.2)}
+
+.node-camera{background:rgba(0,80,180,.12);border:1px solid rgba(80,160,255,.25)}
+.node-camera .node-pulse{background:#5090ff;box-shadow:0 0 6px #5090ff}
+.node-camera:hover{box-shadow:0 0 20px rgba(80,160,255,.2)}
+
+.node-ingest{background:rgba(0,140,100,.12);border:1px solid rgba(0,220,160,.25);min-width:150px}
+.node-ingest .node-pulse{background:var(--teal);box-shadow:0 0 6px var(--teal)}
+.node-ingest:hover{box-shadow:0 0 20px rgba(0,220,160,.2)}
+
+.node-core-item{background:rgba(100,0,160,.12);border:1px solid rgba(168,85,247,.25);min-width:160px}
+.node-core-item .node-pulse{background:var(--purple);box-shadow:0 0 6px var(--purple)}
+.node-core-item:hover{box-shadow:0 0 20px rgba(168,85,247,.2)}
+
+/* RULE ENGINE */
+.rule-engine-box{background:rgba(34,197,94,.08);border:2px solid rgba(34,197,94,.25);border-radius:14px;padding:18px 20px;flex:1}
+.rule-engine-box h3{font-size:.72rem;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.rule-tag{display:inline-block;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:var(--green);font-size:.6rem;padding:2px 8px;border-radius:4px;font-family:monospace}
+.rule-actions{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.rule-action{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);padding:6px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid rgba(34,197,94,.3)}
+.rule-pct{font-size:.85rem;font-weight:800;color:var(--green)}
+
+/* AI AGENTS BOX */
+.agents-box{background:rgba(168,85,247,.06);border:2px solid rgba(168,85,247,.2);border-radius:14px;padding:18px 20px;flex:1}
+.agents-box h3{font-size:.72rem;font-weight:700;color:var(--purple);letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.agent-pct{font-size:.85rem;font-weight:800;color:var(--purple)}
+.agent-nodes{display:flex;flex-direction:column;gap:8px}
+
+.agent-node{border-radius:10px;padding:12px 14px;position:relative;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.agent-node:hover{transform:translateX(3px)}
+.agent-node.attendee{background:rgba(0,170,255,.08);border:1px solid rgba(0,170,255,.25)}
+.agent-node.emergency{background:rgba(255,68,68,.08);border:1px solid rgba(255,68,68,.25)}
+.agent-node.vision{background:rgba(0,220,160,.08);border:1px solid rgba(0,220,160,.25)}
+.agent-node .an-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.agent-node .an-icon{font-size:1.2rem}
+.agent-node .an-name{font-size:.78rem;font-weight:700}
+.agent-node .an-model{font-size:.6rem;font-family:monospace;color:var(--muted);margin-top:1px}
+.agent-node .an-tools{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.agent-tool{font-size:.58rem;font-family:monospace;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--muted);padding:1px 6px;border-radius:3px}
+.agent-node .node-pulse{top:10px;right:10px}
+.agent-node.attendee .node-pulse{background:var(--blue);box-shadow:0 0 6px var(--blue)}
+.agent-node.emergency .node-pulse{background:var(--red);box-shadow:0 0 6px var(--red);animation-duration:.8s}
+.agent-node.vision .node-pulse{background:var(--teal);box-shadow:0 0 6px var(--teal)}
+
+/* DECISION LAYOUT */
+.decision-split{display:flex;gap:20px;align-items:stretch}
+.decision-divider{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 8px}
+.divider-line{width:1px;flex:1;background:linear-gradient(180deg,transparent,rgba(255,255,255,.15),transparent)}
+.divider-text{font-size:.6rem;color:var(--muted);writing-mode:vertical-rl;letter-spacing:2px;text-transform:uppercase}
+
+/* ROUTER */
+.router-box{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:10px 18px;text-align:center;margin-bottom:16px;font-size:.75rem;color:var(--yellow)}
+.router-box strong{color:var(--yellow);font-size:.85rem}
+
+/* API LAYER */
+.api-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.api-node{background:rgba(0,140,180,.1);border:1px solid rgba(0,170,255,.2);border-radius:10px;padding:14px;position:relative;cursor:pointer;transition:transform .15s}
+.api-node:hover{transform:translateY(-2px);box-shadow:0 0 20px rgba(0,170,255,.15)}
+.api-node .node-pulse{background:var(--blue);box-shadow:0 0 6px var(--blue);top:10px;right:10px}
+.api-route{font-size:.6rem;font-family:monospace;color:var(--blue);background:rgba(0,170,255,.1);padding:2px 8px;border-radius:4px;margin-bottom:6px;display:inline-block}
+.api-method{font-size:.55rem;font-family:monospace;color:var(--teal);margin-right:4px}
+
+.node-output{background:rgba(0,120,60,.1);border:1px solid rgba(34,197,94,.2);min-width:120px}
+.node-output .node-pulse{background:var(--green);box-shadow:0 0 6px var(--green)}
+.node-output:hover{box-shadow:0 0 20px rgba(34,197,94,.15)}
+
+/* FLOW ARROWS */
+.flow-arrow{display:flex;justify-content:center;align-items:center;padding:6px 0;position:relative;height:44px}
+.arrow-line{width:2px;height:100%;background:linear-gradient(180deg,transparent,rgba(80,120,180,.5),transparent);position:relative;margin:0 auto}
+.arrow-line::after{content:'▼';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);color:rgba(80,120,180,.7);font-size:.65rem}
+.flow-label{position:absolute;left:50%;transform:translateX(-50%);background:rgba(6,11,20,.9);border:1px solid var(--border);color:var(--muted);font-size:.58rem;padding:2px 10px;border-radius:10px;white-space:nowrap;letter-spacing:.5px}
+
+/* CODEBASE TREE */
+.code-tree{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;margin:32px auto;max-width:900px;font-family:monospace;font-size:.75rem;line-height:2}
+.code-tree h3{font-size:.8rem;font-weight:700;color:var(--text);margin-bottom:16px;font-family:'Segoe UI',sans-serif;letter-spacing:1px}
+.tree-dir{color:var(--blue)}
+.tree-file{color:var(--muted)}
+.tree-file.py{color:var(--teal)}
+.tree-file.json{color:var(--yellow)}
+.tree-file.yaml{color:var(--orange)}
+.tree-file.html{color:var(--purple)}
+.tree-comment{color:#3a5a7a;font-size:.68rem}
+.tree-indent1{padding-left:20px}
+.tree-indent2{padding-left:40px}
+.tree-indent3{padding-left:60px}
+
+/* LIVE FEEDS */
+.live-section{max-width:1400px;margin:0 auto;padding:0 24px 60px}
+.live-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.feed-panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;height:220px;overflow:hidden}
+.feed-panel h3{font-size:.65rem;letter-spacing:2px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;display:flex;justify-content:space-between}
+.feed-log{display:flex;flex-direction:column;gap:6px}
+.feed-entry{font-size:.68rem;padding:5px 8px;border-radius:6px;border-left:3px solid;animation:slideIn .3s ease;line-height:1.5}
+.feed-entry.info{background:rgba(0,170,255,.06);border-color:var(--blue);color:#a0d4f0}
+.feed-entry.warn{background:rgba(255,149,0,.06);border-color:var(--orange);color:#ffd080}
+.feed-entry.crit{background:rgba(255,68,68,.08);border-color:var(--red);color:#ffaaaa}
+.feed-entry.ok{background:rgba(34,197,94,.06);border-color:var(--green);color:#80e8a8}
+.feed-time{color:#4a6a85;margin-right:6px}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* ZONE GRID */
+.zone-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.zone-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px;transition:border-color .3s}
+.zone-card h4{font-size:.7rem;color:var(--muted);margin-bottom:8px}
+.zone-bar-wrap{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.zone-bar{height:100%;border-radius:3px;transition:width .8s,background .5s}
+.zone-stats{display:flex;justify-content:space-between;font-size:.6rem}
+
+/* TOOLTIP */
+.tooltip{position:fixed;z-index:500;background:rgba(6,11,20,.97);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:14px 18px;max-width:280px;font-size:.73rem;line-height:1.6;color:#c0d8e8;pointer-events:none;opacity:0;transition:opacity .18s;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+.tooltip.show{opacity:1}
+.tooltip strong{color:#fff;display:block;margin-bottom:5px;font-size:.8rem}
+.tooltip code{background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:.68rem;color:var(--teal)}
+
+#flowCanvas{position:fixed;top:0;left:0;pointer-events:none;z-index:10;opacity:.55}
+
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1a2a3a;border-radius:3px}
+
+@media(max-width:768px){
+  .decision-split{flex-direction:column}
+  .live-grid{grid-template-columns:1fr}
+  nav{padding:0 16px}
+  .arch{padding:0 16px 60px}
+}
+</style>
+</head>
+<body>
+<canvas id="flowCanvas"></canvas>
+<div class="tooltip" id="tooltip"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-back" href="index.html">← Back to VIS</a>
+  <div class="nav-title">System Architecture</div>
+  <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <h1>⚡ Venue Intelligence System</h1>
+  <p>Full system architecture · 5 layers · 3 AI agents · 284 sensors · 96 cameras</p>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-chip"><div class="val" id="s-attendees" style="color:var(--blue)">72,441</div><div class="lbl">Attendees Live</div></div>
+  <div class="stat-chip"><div class="val" id="s-sensors" style="color:var(--teal)">284</div><div class="lbl">Sensors Active</div></div>
+  <div class="stat-chip"><div class="val" id="s-cameras" style="color:#5090ff">96</div><div class="lbl">Cameras Online</div></div>
+  <div class="stat-chip"><div class="val" id="s-agents" style="color:var(--purple)">3</div><div class="lbl">AI Agents</div></div>
+  <div class="stat-chip"><div class="val" id="s-events" style="color:var(--orange)">0</div><div class="lbl">Events / Min</div></div>
+  <div class="stat-chip"><div class="val" id="s-alerts" style="color:var(--red)">0</div><div class="lbl">Active Alerts</div></div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="arch">
+
+  <!-- LAYER 1 -->
+  <div class="layer layer-physical">
+    <div class="layer-title">🌐 Layer 1 — Physical World <span class="layer-tag">HARDWARE</span></div>
+    <div class="node-row" id="sensors-row">
+      <div class="node node-sensor" data-id="s-crowd"
+        data-tip="<strong>Crowd Density Sensors</strong>Infrared thermal arrays in all concourses and seating blocks. Measures people/sqm every 5 seconds across 86 zones. Feeds into threshold gate in core/ingestion.py.<br><code>SensorType.crowd_density</code>">
+        <div class="node-pulse"></div><div class="node-icon">📡</div>
+        <div class="node-name">Crowd Density</div><div class="node-desc">86 zones · 5s</div>
+      </div>
+      <div class="node node-sensor" data-id="s-queue"
+        data-tip="<strong>Queue Depth Sensors</strong>Ultrasonic + laser ToF sensors at concession stands, restrooms, merchandise. Real-time queue length per point, 48 sensors total.<br><code>SensorType.queue_depth</code>">
+        <div class="node-pulse"></div><div class="node-icon">📶</div>
+        <div class="node-name">Queue Depth</div><div class="node-desc">48 points · 5s</div>
+      </div>
+      <div class="node node-sensor" data-id="s-turnstile"
+        data-tip="<strong>Turnstile Counters</strong>Access control hardware fires an event on every rotation — exact inbound/outbound count per gate in real time across all 32 entry/exit gates.<br><code>SensorType.crowd_density</code>">
+        <div class="node-pulse"></div><div class="node-icon">🚪</div>
+        <div class="node-name">Turnstile Counters</div><div class="node-desc">32 gates · real-time</div>
+      </div>
+      <div class="node node-sensor" data-id="s-env"
+        data-tip="<strong>Environmental Sensors</strong>CO₂, temperature, and humidity monitors in concourses and concession areas. Used by HVAC control logic in the rule engine.<br><code>SensorType.structural_load</code>">
+        <div class="node-pulse"></div><div class="node-icon">🌡️</div>
+        <div class="node-name">Environmental</div><div class="node-desc">CO₂ · Temp · Humidity</div>
+      </div>
+      <div class="node node-sensor" data-id="s-parking"
+        data-tip="<strong>Parking Bay Sensors</strong>Magnetic + ultrasonic sensors per bay across all lots. 1,200 bays total. Gives exact open-bay counts and drives the parking overflow rules.<br><code>SensorType.parking_bay</code>">
+        <div class="node-pulse"></div><div class="node-icon">🅿️</div>
+        <div class="node-name">Parking Sensors</div><div class="node-desc">1,200 bays · 10s</div>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="node-row" id="cameras-row">
+        <div class="node node-camera" data-id="c-gate"
+          data-tip="<strong>Gate Cameras (32)</strong>Fixed cameras at all entry gates. YOLOv8 detects crowd build-up every 5s. Claude Vision called when anomaly_score > 0.7.<br><code>VisionAnomalyAgent.analyse()</code>">
+          <div class="node-pulse"></div><div class="node-icon">📷</div>
+          <div class="node-name">Gate Cameras</div><div class="node-desc">32 · RTSP</div>
+        </div>
+        <div class="node node-camera" data-id="c-concourse"
+          data-tip="<strong>Concourse Cameras (24)</strong>Wide-angle cameras in all main corridors. YOLOv8 optical flow detects bottleneck formation and crowd direction/speed.<br><code>VisionAnomalyAgent.analyse()</code>">
+          <div class="node-pulse"></div><div class="node-icon">🎥</div>
+          <div class="node-name">Concourse Cameras</div><div class="node-desc">24 · RTSP</div>
+        </div>
+        <div class="node node-camera" data-id="c-bowl"
+          data-tip="<strong>Bowl & Stand Cameras (28)</strong>Overhead cameras covering seating bowl. YOLOv8 density heatmaps every 5s. Claude Vision interprets any anomaly_score > 0.7.<br><code>api/routes/events.py → /events/camera</code>">
+          <div class="node-pulse"></div><div class="node-icon">🔭</div>
+          <div class="node-name">Bowl Cameras</div><div class="node-desc">28 · RTSP</div>
+        </div>
+        <div class="node node-camera" data-id="c-parking"
+          data-tip="<strong>Parking Cameras (12)</strong>Cover all lots and rideshare zones. Monitors fill rates, shuttle bay capacity, and pedestrian exit flow post-game.">
+          <div class="node-pulse"></div><div class="node-icon">🚗</div>
+          <div class="node-name">Parking Cameras</div><div class="node-desc">12 · RTSP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">MQTT (sensors) · RTSP streams (cameras) → Python asyncio</div></div>
+
+  <!-- LAYER 2 -->
+  <div class="layer layer-ingestion">
+    <div class="layer-title">⚙️ Layer 2 — Ingestion Pipeline <span class="layer-tag">core/ingestion.py</span></div>
+    <div class="node-row">
+      <div class="node node-ingest" data-id="ingest-mqtt"
+        data-tip="<strong>MQTT Client</strong>Subscribes to all sensor topics. Parses raw payloads into Pydantic <code>SensorEvent</code> models defined in data/models.py. Handles ~50 messages/second via asyncio.<br><code>data/models.py → SensorEvent</code>">
+        <div class="node-pulse"></div><div class="node-icon">📨</div>
+        <div class="node-name">MQTT Client</div><div class="node-desc">Parse · Validate · Normalise</div>
+        <div class="node-file">data/models.py</div>
+      </div>
+      <div class="node node-ingest" style="min-width:190px" data-id="ingest-cv"
+        data-tip="<strong>CV Pipeline (Two Tracks)</strong>Track A: YOLOv8 runs every 5s on all 96 cameras — headcount, flow vectors, anomaly score. Free, always-on.<br>Track B: When anomaly_score > 0.7, <code>CameraFrame</code> is published to event bus which triggers VisionAnomalyAgent.<br><code>config/thresholds.yaml → camera_anomaly.vision_threshold: 0.70</code>">
+        <div class="node-pulse"></div><div class="node-icon">👁️</div>
+        <div class="node-name">CV Pipeline</div><div class="node-desc">YOLOv8 always-on · Claude Vision on anomaly</div>
+        <div class="node-file">thresholds.yaml</div>
+      </div>
+      <div class="node node-ingest" style="min-width:210px" data-id="ingest-gate"
+        data-tip="<strong>Threshold Gate + State Update</strong>Deduplicates (10s sliding window). Checks sensor values against config/thresholds.yaml. Updates zone occupancy/queue in state_store. Publishes to event bus as:<br>• <code>sensor.{type}</code> (normal)<br>• <code>alert.{severity}.{type}</code> (threshold breached)<br><code>core/ingestion.py → ingest(event)</code>">
+        <div class="node-pulse"></div><div class="node-icon">🔄</div>
+        <div class="node-name">Threshold Gate</div><div class="node-desc">Deduplicate · Enrich · Classify · Publish</div>
+        <div class="node-file">core/ingestion.py</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Enriched SensorEvents → asyncio.Queue (event bus)</div></div>
+
+  <!-- LAYER 3 -->
+  <div class="layer layer-core">
+    <div class="layer-title">🧠 Layer 3 — Core Infrastructure <span class="layer-tag">core/</span></div>
+    <div class="node-row">
+      <div class="node node-core-item" data-id="state-store"
+        data-tip="<strong>State Store</strong>In-memory dict holding live <code>VenueState</code> with all <code>ZoneState</code> objects. Loads initial layout from config/venue_layout.json. Agents read from here instead of querying hardware directly.<br><code>core/state_store.py → StateStore</code><br>Swappable to Redis — one file change.">
+        <div class="node-pulse"></div><div class="node-icon">🗄️</div>
+        <div class="node-name">State Store</div><div class="node-desc">In-memory VenueState · ZoneState</div>
+        <div class="node-file">core/state_store.py</div>
+      </div>
+      <div class="node node-core-item" data-id="event-bus"
+        data-tip="<strong>Event Bus</strong>asyncio.Queue-based pub/sub. subscribe(event_type) for specific events, subscribe_all(handler) for everything. High-priority events fan out to multiple subscribers in parallel.<br><code>core/event_bus.py → EventBus</code>">
+        <div class="node-pulse"></div><div class="node-icon">⚡</div>
+        <div class="node-name">Event Bus</div><div class="node-desc">asyncio.Queue · pub/sub · fan-out</div>
+        <div class="node-file">core/event_bus.py</div>
+      </div>
+      <div class="node node-core-item" data-id="claude-client"
+        data-tip="<strong>Anthropic Client + Prompt Cache</strong>Singleton Anthropic client with lru_cache. build_cached_system() splits system prompts into static prefix (cache_control: ephemeral) + dynamic context. Saves ~80% tokens on repeat calls.<br><code>core/client.py → build_cached_system()</code>">
+        <div class="node-pulse"></div><div class="node-icon">💾</div>
+        <div class="node-name">Claude Client</div><div class="node-desc">Prompt caching · Singleton · lru_cache</div>
+        <div class="node-file">core/client.py</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Routed events → Decision Layer</div></div>
+
+  <!-- LAYER 4: DECISION LAYER -->
+  <div class="layer layer-decision">
+    <div class="layer-title">🎯 Layer 4 — Decision Layer <span class="layer-tag" style="background:rgba(251,191,36,.12);color:var(--yellow)">INTELLIGENCE</span></div>
+
+    <div class="router-box">
+      <strong>Event Router</strong> — api/main.py · _on_alert()<br>
+      <span style="opacity:.7">"critical" / "emergency" → EmergencyAgent · "vision.anomaly" → VisionAgent · attendee WebSocket → AttendeeAgent · everything else → Rule Engine</span>
+    </div>
+
+    <div class="decision-split">
+      <!-- RULE ENGINE -->
+      <div class="rule-engine-box">
+        <h3><span class="rule-pct">80%</span> Rule Engine <span class="rule-tag">rules/engine.py</span></h3>
+        <p style="font-size:.72rem;color:var(--muted);margin-bottom:10px">Instant decisions with zero API cost. Pure Python logic covering the majority of venue events.</p>
+        <div class="rule-actions">
+          <div class="rule-action" data-id="rule-crowd">👥 <strong style="color:var(--text)">Crowd Routing</strong> — redirect signage when density &gt;70%</div>
+          <div class="rule-action" data-id="rule-queue">⏱️ <strong style="color:var(--text)">Queue Management</strong> — dispatch staff when queue &gt;8 people</div>
+          <div class="rule-action" data-id="rule-parking">🅿️ <strong style="color:var(--text)">Parking Overflow</strong> — activate Lot D when Lot A &gt;90%</div>
+          <div class="rule-action" data-id="rule-staff">👮 <strong style="color:var(--text)">Staff Dispatch</strong> — reassign staff between zones by load</div>
+        </div>
+      </div>
+
+      <div class="decision-divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">vs</div>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- AI AGENTS -->
+      <div class="agents-box">
+        <h3><span class="agent-pct">20%</span> AI Agents <span class="rule-tag" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3);color:var(--purple)">agents/</span></h3>
+        <p style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Only when rules can't handle it — natural language, novel scenarios, visual reasoning.</p>
+        <div class="agent-nodes">
+
+          <div class="agent-node attendee" data-id="a-attendee"
+            data-tip="<strong>AttendeeExperienceAgent</strong>Handles fan chat via WebSocket. Multi-turn conversation with full tool use loop. Streams responses token-by-token back to mobile app.<br><code>agents/attendee/agent.py</code><br>Model: claude-sonnet-4-6<br>Trigger: WebSocket /ws/attendee/{id}">
+            <div class="node-pulse"></div>
+            <div class="an-header"><span class="an-icon">💬</span><div><div class="an-name">AttendeeExperienceAgent</div><div class="an-model">claude-sonnet-4-6 · Streaming · WebSocket</div></div></div>
+            <div class="an-tools"><span class="agent-tool">lookup_seat</span><span class="agent-tool">get_queue_wait</span><span class="agent-tool">find_nearest_amenity</span><span class="agent-tool">place_food_order</span><span class="agent-tool">request_accessibility_help</span></div>
+          </div>
+
+          <div class="agent-node emergency" data-id="a-emergency"
+            data-tip="<strong>EmergencyResponseAgent</strong>Fires on any 'critical' or 'emergency' event from the event bus. Uses Opus 4.7 because each emergency is a novel combination of factors no ruleset covers.<br><code>agents/emergency/agent.py</code><br>Model: claude-opus-4-7 · max_tokens: 2048<br>Trigger: alert.critical.* or alert.emergency.*">
+            <div class="node-pulse"></div>
+            <div class="an-header"><span class="an-icon">🚨</span><div><div class="an-name" style="color:#ff9999">EmergencyResponseAgent</div><div class="an-model">claude-opus-4-7 · 2048 tokens · Adaptive</div></div></div>
+            <div class="an-tools"><span class="agent-tool">get_venue_state</span><span class="agent-tool">get_evacuation_routes</span><span class="agent-tool">activate_pa_announcement</span><span class="agent-tool">contact_emergency_services</span><span class="agent-tool">trigger_zone_evacuation</span><span class="agent-tool">dispatch_medical_team</span></div>
+          </div>
+
+          <div class="agent-node vision" data-id="a-vision"
+            data-tip="<strong>VisionAnomalyAgent</strong>Receives CameraFrame when anomaly_score > 0.7. Sends base64 image + CV metadata to Claude Vision. Returns structured JSON: headcount_estimate, density_level, safety_concerns, risk_score, recommended_action.<br><code>agents/vision_anomaly/agent.py</code><br>Model: claude-sonnet-4-6 + Vision<br>Trigger: alert.vision.anomaly">
+            <div class="node-pulse"></div>
+            <div class="an-header"><span class="an-icon">👁️</span><div><div class="an-name" style="color:#80f0d0">VisionAnomalyAgent</div><div class="an-model">claude-sonnet-4-6 + Vision · anomaly_score &gt; 0.7</div></div></div>
+            <div class="an-tools"><span class="agent-tool">analyse_frame</span><span class="agent-tool">assess_safety_risk</span><span class="agent-tool">recommend_action</span></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Rule actions + Agent responses → FastAPI</div></div>
+
+  <!-- LAYER 5: API -->
+  <div class="layer layer-api">
+    <div class="layer-title">🚀 Layer 5 — API Layer <span class="layer-tag">api/</span></div>
+    <div class="api-grid">
+      <div class="api-node" data-id="api-events"
+        data-tip="<strong>Sensor Events Route</strong>Accepts inbound sensor data from real hardware or simulator. Calls core/ingestion.py which gates, enriches, and publishes to event bus.<br><code>api/routes/events.py</code><br><code>POST /events/sensor</code><br><code>POST /events/camera</code>">
+        <div class="node-pulse"></div>
+        <div class="api-route"><span class="api-method">POST</span>/events/sensor</div>
+        <div class="api-route"><span class="api-method">POST</span>/events/camera</div>
+        <div style="font-size:.72rem;font-weight:600;margin-top:6px">Sensor Ingestion</div>
+        <div style="font-size:.6rem;color:var(--muted)">api/routes/events.py</div>
+      </div>
+      <div class="api-node" data-id="api-ws"
+        data-tip="<strong>Attendee WebSocket</strong>Persistent WebSocket connection per attendee. Receives messages, calls AttendeeExperienceAgent.chat_stream() and pipes each text chunk back as {type:'delta', text:chunk} JSON.<br><code>api/routes/attendee.py</code><br><code>WS /ws/attendee/{id}</code>">
+        <div class="node-pulse"></div>
+        <div class="api-route"><span class="api-method">WS</span>/ws/attendee/{id}</div>
+        <div style="font-size:.72rem;font-weight:600;margin-top:6px">Attendee WebSocket</div>
+        <div style="font-size:.6rem;color:var(--muted)">api/routes/attendee.py · Streaming</div>
+      </div>
+      <div class="api-node" data-id="api-ops"
+        data-tip="<strong>Operations Status</strong>Returns full live venue snapshot: mode, alert level, all zone occupancies, queue depths, active incidents. Used by the ops dashboard.<br><code>api/routes/ops.py</code><br><code>GET /ops/status</code>">
+        <div class="node-pulse"></div>
+        <div class="api-route"><span class="api-method">GET</span>/ops/status</div>
+        <div style="font-size:.72rem;font-weight:600;margin-top:6px">Ops Status</div>
+        <div style="font-size:.6rem;color:var(--muted)">api/routes/ops.py</div>
+      </div>
+      <div class="api-node" data-id="api-lifespan"
+        data-tip="<strong>FastAPI Lifespan</strong>On startup: subscribes rule_engine + emergency_agent + vision_agent to event bus, starts event bus drain task, starts simulator task.<br><code>api/main.py → lifespan()</code><br>Entry point: main.py → uvicorn port 8000">
+        <div class="node-pulse"></div>
+        <div class="api-route"><span class="api-method">APP</span>FastAPI Lifespan</div>
+        <div style="font-size:.72rem;font-weight:600;margin-top:6px">App Startup</div>
+        <div style="font-size:.6rem;color:var(--muted)">api/main.py · main.py</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Responses + actions → Real-world outputs</div></div>
+
+  <!-- LAYER 6 -->
+  <div class="layer layer-outputs">
+    <div class="layer-title">📤 Layer 6 — Real-World Outputs <span class="layer-tag">ACTIONS</span></div>
+    <div class="node-row">
+      <div class="node node-output"
+        data-tip="<strong>Attendee Mobile App</strong>Receives streamed AI responses via WebSocket. Displays chat, seat directions, food order confirmations, queue wait times, and accessibility help.">
+        <div class="node-pulse"></div><div class="node-icon">📱</div>
+        <div class="node-name">Mobile App</div><div class="node-desc">WebSocket chat · Streaming</div>
+      </div>
+      <div class="node node-output"
+        data-tip="<strong>Operations Dashboard</strong>Live zone heatmaps, incident timeline, staff positions, queue metrics. Reads from GET /ops/status every 2 seconds.">
+        <div class="node-pulse"></div><div class="node-icon">🖥️</div>
+        <div class="node-name">Ops Dashboard</div><div class="node-desc">Live heatmaps · Zone status</div>
+      </div>
+      <div class="node node-output"
+        data-tip="<strong>PA System</strong>Zone-targeted or venue-wide announcements. Emergency agent uses activate_pa_announcement tool. Output streams directly so PA starts before message is fully composed.">
+        <div class="node-pulse"></div><div class="node-icon">📣</div>
+        <div class="node-name">PA System</div><div class="node-desc">Zone-targeted · Streaming</div>
+      </div>
+      <div class="node node-output"
+        data-tip="<strong>Digital Signage</strong>All wayfinding boards updated in seconds with crowd routing, queue times, and emergency messages from the rule engine and agents.">
+        <div class="node-pulse"></div><div class="node-icon">🪧</div>
+        <div class="node-name">Digital Signage</div><div class="node-desc">Routing · Queues · Alerts</div>
+      </div>
+      <div class="node node-output"
+        data-tip="<strong>Emergency Services</strong>Emergency agent calls contact_emergency_services tool with structured incident data, venue access codes, and recommended approach routes.">
+        <div class="node-pulse"></div><div class="node-icon">🚑</div>
+        <div class="node-name">Emergency Services</div><div class="node-desc">EMS · Police · Fire</div>
+      </div>
+      <div class="node node-output"
+        data-tip="<strong>Staff Radio & App</strong>Dispatch instructions from rule engine (queue overflow, parking) and Emergency Agent (medical, security incidents) delivered simultaneously.">
+        <div class="node-pulse"></div><div class="node-icon">📻</div>
+        <div class="node-name">Staff Radio</div><div class="node-desc">Dispatch · Instructions</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CODEBASE TREE -->
+<div class="code-tree" style="margin:0 auto 0;max-width:1352px;margin-left:auto;margin-right:auto;margin-bottom:32px;margin-left:24px;margin-right:24px">
+  <h3>📁 Codebase Structure</h3>
+  <div><span class="tree-dir">d:/APL/ch1/</span></div>
+  <div class="tree-indent1"><span class="tree-dir">agents/</span> <span class="tree-comment">— AI agent modules</span></div>
+  <div class="tree-indent2"><span class="tree-dir">attendee/</span> &nbsp;<span class="tree-file py">agent.py</span> · <span class="tree-file py">system_prompt.py</span> · <span class="tree-file py">tools.py</span></div>
+  <div class="tree-indent2"><span class="tree-dir">emergency/</span> &nbsp;<span class="tree-file py">agent.py</span> · <span class="tree-file py">system_prompt.py</span> · <span class="tree-file py">tools.py</span></div>
+  <div class="tree-indent2"><span class="tree-dir">vision_anomaly/</span> &nbsp;<span class="tree-file py">agent.py</span> · <span class="tree-file py">system_prompt.py</span></div>
+  <div class="tree-indent2"><span class="tree-file py">base_agent.py</span> <span class="tree-comment">— shared agentic loop (tool_use → execute → repeat)</span></div>
+  <div class="tree-indent1"><span class="tree-dir">api/</span></div>
+  <div class="tree-indent2"><span class="tree-file py">main.py</span> <span class="tree-comment">— FastAPI app + lifespan (wires everything)</span></div>
+  <div class="tree-indent2"><span class="tree-dir">routes/</span> &nbsp;<span class="tree-file py">events.py</span> · <span class="tree-file py">attendee.py</span> · <span class="tree-file py">ops.py</span></div>
+  <div class="tree-indent1"><span class="tree-dir">config/</span></div>
+  <div class="tree-indent2"><span class="tree-file py">settings.py</span> · <span class="tree-file json">venue_layout.json</span> · <span class="tree-file yaml">thresholds.yaml</span></div>
+  <div class="tree-indent1"><span class="tree-dir">core/</span></div>
+  <div class="tree-indent2"><span class="tree-file py">client.py</span> <span class="tree-comment">— Anthropic client + prompt caching</span></div>
+  <div class="tree-indent2"><span class="tree-file py">event_bus.py</span> <span class="tree-comment">— asyncio.Queue pub/sub</span></div>
+  <div class="tree-indent2"><span class="tree-file py">ingestion.py</span> <span class="tree-comment">— normalize + threshold gate + publish</span></div>
+  <div class="tree-indent2"><span class="tree-file py">state_store.py</span> <span class="tree-comment">— in-memory VenueState</span></div>
+  <div class="tree-indent1"><span class="tree-dir">data/</span> &nbsp;<span class="tree-file py">models.py</span> <span class="tree-comment">— Pydantic v2: SensorEvent, ZoneState, VenueState, Incident, AttendeeSession</span></div>
+  <div class="tree-indent1"><span class="tree-dir">rules/</span> &nbsp;<span class="tree-file py">engine.py</span> <span class="tree-comment">— rule engine: crowd routing, queue alerts, parking overflow, staff dispatch</span></div>
+  <div class="tree-indent1"><span class="tree-dir">scripts/</span> &nbsp;<span class="tree-file py">simulate_realtime.py</span> <span class="tree-comment">— publishes synthetic SensorEvents every 2s</span></div>
+  <div class="tree-indent1"><span class="tree-dir">public/</span> &nbsp;<span class="tree-file html">index.html</span> · <span class="tree-file html">architecture.html</span> <span class="tree-comment">— GitHub Pages website</span></div>
+  <div class="tree-indent1"><span class="tree-file py">main.py</span> <span class="tree-comment">— entry point: uvicorn on port 8000</span></div>
+  <div class="tree-indent1"><span class="tree-file">requirements.txt</span> · <span class="tree-file">.env.example</span> · <span class="tree-file json">firebase.json</span></div>
+</div>
+
+<!-- LIVE FEEDS -->
+<div class="live-section">
+  <div style="font-size:.65rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px">Live Event Feed</div>
+  <div class="live-grid">
+    <div class="feed-panel"><h3>System Events <span style="color:var(--green);font-size:.6rem">● LIVE</span></h3><div class="feed-log" id="event-log"></div></div>
+    <div class="feed-panel"><h3>Agent Activity <span style="color:var(--purple);font-size:.6rem">● AI</span></h3><div class="feed-log" id="agent-log"></div></div>
+  </div>
+  <div style="font-size:.65rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px">Live Zone Status</div>
+  <div class="zone-grid" id="zone-grid"></div>
+</div>
+
+<script>
+// TOOLTIP
+const tip = document.getElementById('tooltip');
+document.querySelectorAll('[data-tip]').forEach(el => {
+  el.addEventListener('mouseenter', e => {
+    tip.innerHTML = el.dataset.tip;
+    tip.classList.add('show');
+  });
+  el.addEventListener('mousemove', e => {
+    let x = e.clientX + 14, y = e.clientY - 10;
+    if(x + 290 > window.innerWidth) x = e.clientX - 295;
+    if(y + 200 > window.innerHeight) y = e.clientY - 210;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  });
+  el.addEventListener('mouseleave', () => tip.classList.remove('show'));
+});
+
+// ZONES
+const zones = [
+  {name:'Gate North',occ:78},{name:'Gate South',occ:45},{name:'Concourse N',occ:88},
+  {name:'Concourse S',occ:62},{name:'Food North',wait:12},{name:'Food South',wait:4},
+  {name:'Parking A',occ:92},{name:'Parking B',occ:67},{name:'Restroom A',wait:3},{name:'Restroom B',wait:8},
+];
+const zg = document.getElementById('zone-grid');
+zones.forEach((z,i) => {
+  const isQ=!!z.wait, pct=isQ?Math.min(z.wait*8,100):z.occ;
+  const col=pct>85?'var(--red)':pct>70?'var(--orange)':'var(--green)';
+  const d=document.createElement('div'); d.className='zone-card'; d.id='zc'+i;
+  d.innerHTML=`<h4>${z.name}</h4><div class="zone-bar-wrap"><div class="zone-bar" id="zb${i}" style="width:${pct}%;background:${col}"></div></div><div class="zone-stats"><span id="zs${i}">${isQ?`Wait: ${z.wait}m`:`Occ: ${z.occ}%`}</span><span id="zl${i}" style="color:${col}">${pct>85?'CRITICAL':pct>70?'ELEVATED':'NORMAL'}</span></div>`;
+  zg.appendChild(d);
+});
+function fluctZones(){
+  zones.forEach((z,i)=>{
+    const isQ=!!z.wait;
+    if(isQ){z.wait=Math.max(0,Math.min(20,z.wait+(Math.random()>.5?1:-1)));}
+    else{z.occ=Math.max(30,Math.min(99,z.occ+Math.round((Math.random()-.48)*3)));}
+    const pct=isQ?Math.min(z.wait*8,100):z.occ;
+    const col=pct>85?'var(--red)':pct>70?'var(--orange)':'var(--green)';
+    const b=document.getElementById('zb'+i),s=document.getElementById('zs'+i),l=document.getElementById('zl'+i);
+    if(b){b.style.width=pct+'%';b.style.background=col;}
+    if(s)s.textContent=isQ?`Wait: ${z.wait}m`:`Occ: ${z.occ}%`;
+    if(l){l.textContent=pct>85?'CRITICAL':pct>70?'ELEVATED':'NORMAL';l.style.color=col;}
+  });
+}
+
+// LIVE LOGS
+const evLog=document.getElementById('event-log'), agLog=document.getElementById('agent-log');
+function addLog(c,type,msg){
+  const el=document.createElement('div');el.className=`feed-entry ${type}`;
+  const t=new Date();
+  el.innerHTML=`<span class="feed-time">${t.getHours().toString().padStart(2,'0')}:${t.getMinutes().toString().padStart(2,'0')}:${t.getSeconds().toString().padStart(2,'0')}</span>${msg}`;
+  c.insertBefore(el,c.firstChild);while(c.children.length>7)c.removeChild(c.lastChild);
+}
+const SIM=[
+  [()=>addLog(evLog,'info','📡 Concourse N density = 88% — threshold breached'),()=>addLog(agLog,'warn','⚙️ Rule Engine: Redirect signage updated · Gate C auxiliary opening'),'warn'],
+  [()=>addLog(evLog,'info','🎥 CV anomaly Gate B — anomaly_score 0.83'),()=>addLog(agLog,'info','👁️ VisionAnomalyAgent: Dense crowd formation — risk 0.82, staff deployment recommended'),'info'],
+  [()=>addLog(evLog,'warn','⏱️ Food North queue: 18 people (14 min wait)'),()=>addLog(agLog,'warn','⚙️ Rule Engine: 2 staff redeployed from Food South → Food North'),'warn'],
+  [()=>addLog(evLog,'ok','🅿️ Parking A: 92% — overflow triggered'),()=>addLog(agLog,'ok','⚙️ Rule Engine: Lot D opened · 3 extra shuttles dispatched'),'ok'],
+  [()=>addLog(evLog,'crit','🚨 Medical alert: Section 114, Row G'),()=>addLog(agLog,'crit','🤖 EmergencyAgent (Opus 4.7): Medic dispatched + AED · PA primed · EMS on standby'),'crit'],
+  [()=>addLog(evLog,'ok','📱 Attendee: "nearest accessible restroom?"'),()=>addLog(agLog,'ok','💬 AttendeeAgent (Sonnet): Streaming directions + ordering food to seat A7F2'),'ok'],
+  [()=>addLog(evLog,'info','⚡ Zone C power: 98% capacity'),()=>addLog(agLog,'warn','⚙️ Rule Engine: Load balancing — non-critical circuits shifted'),'warn'],
+  [()=>addLog(evLog,'ok','🌡️ CO₂ elevated: Concourse S'),()=>addLog(agLog,'ok','⚙️ Rule Engine: HVAC Zone S-2 increased 20%'),'ok'],
+];
+let si=0,evpm=0,alc=0;
+function runSim(){
+  const [ev,ag,lvl]=SIM[si%SIM.length]; ev(); ag();
+  evpm+=3+Math.floor(Math.random()*5);
+  if(lvl==='crit'){alc++;document.getElementById('s-alerts').textContent=alc;setTimeout(()=>{alc=Math.max(0,alc-1);document.getElementById('s-alerts').textContent=alc;},15000);}
+  document.getElementById('s-events').textContent=evpm;
+  setTimeout(()=>{evpm=Math.max(0,evpm-2);document.getElementById('s-events').textContent=evpm;},3000);
+  si++;
+}
+let att=72441;
+function fluctAtt(){att+=Math.round((Math.random()-.5)*18);document.getElementById('s-attendees').textContent=att.toLocaleString();}
+
+setInterval(runSim,3200);setInterval(fluctZones,1800);setInterval(fluctAtt,2500);
+setTimeout(runSim,500);setTimeout(runSim,1600);
+
+// CANVAS PARTICLES
+const cv=document.getElementById('flowCanvas'),cx=cv.getContext('2d');
+function rsz(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+rsz();window.addEventListener('resize',rsz);
+function nc(id){const el=document.querySelector(`[data-id="${id}"]`);if(!el)return null;const r=el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};}
+const PATHS=[
+  {f:'s-crowd',t:'ingest-mqtt',col:'#00aaff'},{f:'s-queue',t:'ingest-mqtt',col:'#00aaff'},
+  {f:'s-turnstile',t:'ingest-mqtt',col:'#00aaff'},{f:'s-parking',t:'ingest-gate',col:'#00aaff'},
+  {f:'c-gate',t:'ingest-cv',col:'#5090ff'},{f:'c-concourse',t:'ingest-cv',col:'#5090ff'},
+  {f:'c-bowl',t:'ingest-cv',col:'#5090ff'},
+  {f:'ingest-mqtt',t:'ingest-gate',col:'#00dca0'},{f:'ingest-cv',t:'ingest-gate',col:'#00dca0'},
+  {f:'ingest-gate',t:'state-store',col:'#a855f7'},{f:'ingest-gate',t:'event-bus',col:'#a855f7'},
+  {f:'event-bus',t:'rule-crowd',col:'#22c55e'},{f:'event-bus',t:'rule-queue',col:'#22c55e'},
+  {f:'event-bus',t:'a-attendee',col:'#00aaff'},{f:'event-bus',t:'a-emergency',col:'#ff4444'},
+  {f:'event-bus',t:'a-vision',col:'#00dca0'},
+  {f:'a-attendee',t:'api-ws',col:'#00aaff'},{f:'a-emergency',t:'api-events',col:'#ff4444'},
+  {f:'rule-crowd',t:'api-ops',col:'#22c55e'},
+];
+const pts=[];
+function spawn(){
+  const p=PATHS[Math.floor(Math.random()*PATHS.length)];
+  const a=nc(p.f),b=nc(p.t);if(!a||!b)return;
+  pts.push({ax:a.x,ay:a.y,bx:b.x,by:b.y,t:0,sp:.007+Math.random()*.012,col:p.col,sz:1.8+Math.random()*1.8});
+}
+setInterval(spawn,100);
+function frame(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  for(let i=pts.length-1;i>=0;i--){
+    const p=pts[i];p.t+=p.sp;if(p.t>=1){pts.splice(i,1);continue;}
+    const mx=(p.ax+p.bx)/2,my=(p.ay+p.by)/2-30;
+    const t=p.t;
+    const x=(1-t)*(1-t)*p.ax+2*(1-t)*t*mx+t*t*p.bx;
+    const y=(1-t)*(1-t)*p.ay+2*(1-t)*t*my+t*t*p.by;
+    cx.beginPath();cx.arc(x,y,p.sz*2.2,0,Math.PI*2);cx.fillStyle=p.col+'1a';cx.fill();
+    cx.beginPath();cx.arc(x,y,p.sz,0,Math.PI*2);cx.fillStyle=p.col;cx.fill();
+    const tp=Math.max(t-.06,0);
+    const tx=(1-tp)*(1-tp)*p.ax+2*(1-tp)*tp*mx+tp*tp*p.bx;
+    const ty=(1-tp)*(1-tp)*p.ay+2*(1-tp)*tp*my+tp*tp*p.by;
+    const g=cx.createLinearGradient(tx,ty,x,y);
+    g.addColorStop(0,p.col+'00');g.addColorStop(1,p.col+'99');
+    cx.beginPath();cx.strokeStyle=g;cx.lineWidth=p.sz*.7;cx.moveTo(tx,ty);cx.lineTo(x,y);cx.stroke();
+  }
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body>
+</html>
