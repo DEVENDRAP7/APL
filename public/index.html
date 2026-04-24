@@ -552,29 +552,6 @@ function updateZoneCards() {
   });
 }
 
-function _noop(){
-  sc.strokeRect(CX-fw+8, CY-32, 42, 64);
-  sc.strokeRect(CX+fw-50, CY-32, 42, 64);
-
-  // FIELD label
-  sc.fillStyle = 'rgba(255,255,255,0.12)';
-  sc.font = 'bold 10px Segoe UI';
-  sc.textAlign = 'center';
-  sc.fillText('PLAYING FIELD', CX, CY+4);
-}
-
-function drawCameras(t) {
-  // 8 cameras placed around concourse
-  for(let i=0;i<8;i++){
-    const a = (i/8)*Math.PI*2 - Math.PI/2;
-    const r = (OUTER_RX + WALL_RX)/2;
-    const ry2 = (OUTER_RY + WALL_RY)/2;
-    const x = CX + r*Math.cos(a);
-    const y = CY + ry2*Math.sin(a);
-    const blink = Math.sin(t*0.002 + cameraPhase[i]) > 0.3;
-    // Camera body
-    sc.beginPath(); sc.arc(x,y,5,0,Math.PI*2);
-    sc.fillStyle = blink ? 'rgba(0,170,255,0.9)' : 'rgba(0,170,255,0.3)';
 const SCENARIOS = [
   {
     name:'Normal',
