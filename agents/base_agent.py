@@ -17,7 +17,7 @@ _MOCK_RESPONSES = {
 
 class BaseAgent:
     name: str = "base"
-    model: str = "antigravity-fast"
+    model: str = "gemini-2.5-flash"
     max_tokens: int = 1024
 
     def __init__(self, tools: list[dict], tool_handlers: dict[str, Callable]):

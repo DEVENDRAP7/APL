@@ -5,7 +5,7 @@ from data.models import SensorEvent, AgentResponse
 
 class EmergencyResponseAgent(BaseAgent):
     name = "emergency_response"
-    model = "antigravity-pro"
+    model = "gemini-2.5-pro"
     max_tokens = 2048
 
     def __init__(self):

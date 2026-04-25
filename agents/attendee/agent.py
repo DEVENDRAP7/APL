@@ -5,7 +5,7 @@ from data.models import AttendeeSession, AgentResponse
 
 class AttendeeExperienceAgent(BaseAgent):
     name = "attendee_experience"
-    model = "antigravity-fast"
+    model = "gemini-2.5-flash"
     max_tokens = 1024
 
     def __init__(self):

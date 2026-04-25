@@ -270,7 +270,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
     <div style="margin-top:12px">
       <div class="node-row" id="cameras-row">
         <div class="node node-camera" data-id="c-gate"
-          data-tip="<strong>Gate Cameras (32)</strong>Fixed cameras at all entry gates. YOLOv8 detects crowd build-up every 5s. Antigravity Vision called when anomaly_score > 0.7.<br><code>VisionAnomalyAgent.analyse()</code>">
+          data-tip="<strong>Gate Cameras (32)</strong>Fixed cameras at all entry gates. YOLOv8 detects crowd build-up every 5s. Gemini Vision called when anomaly_score > 0.7.<br><code>VisionAnomalyAgent.analyse()</code>">
           <div class="node-pulse"></div><div class="node-icon">📷</div>
           <div class="node-name">Gate Cameras</div><div class="node-desc">32 · RTSP</div>
         </div>
@@ -280,7 +280,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
           <div class="node-name">Concourse Cameras</div><div class="node-desc">24 · RTSP</div>
         </div>
         <div class="node node-camera" data-id="c-bowl"
-          data-tip="<strong>Bowl & Stand Cameras (28)</strong>Overhead cameras covering seating bowl. YOLOv8 density heatmaps every 5s. Antigravity Vision interprets any anomaly_score > 0.7.<br><code>api/routes/events.py → /events/camera</code>">
+          data-tip="<strong>Bowl & Stand Cameras (28)</strong>Overhead cameras covering seating bowl. YOLOv8 density heatmaps every 5s. Gemini Vision interprets any anomaly_score > 0.7.<br><code>api/routes/events.py → /events/camera</code>">
           <div class="node-pulse"></div><div class="node-icon">🔭</div>
           <div class="node-name">Bowl Cameras</div><div class="node-desc">28 · RTSP</div>
         </div>
@@ -308,7 +308,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
       <div class="node node-ingest" style="min-width:190px" data-id="ingest-cv"
         data-tip="<strong>CV Pipeline (Two Tracks)</strong>Track A: YOLOv8 runs every 5s on all 96 cameras — headcount, flow vectors, anomaly score. Free, always-on.<br>Track B: When anomaly_score > 0.7, <code>CameraFrame</code> is published to event bus which triggers VisionAnomalyAgent.<br><code>config/thresholds.yaml → camera_anomaly.vision_threshold: 0.70</code>">
         <div class="node-pulse"></div><div class="node-icon">👁️</div>
-        <div class="node-name">CV Pipeline</div><div class="node-desc">YOLOv8 always-on · Antigravity Vision on anomaly</div>
+        <div class="node-name">CV Pipeline</div><div class="node-desc">YOLOv8 always-on · Gemini Vision on anomaly</div>
         <div class="node-file">thresholds.yaml</div>
       </div>
       <div class="node node-ingest" style="min-width:210px" data-id="ingest-gate"
@@ -339,7 +339,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
         <div class="node-file">core/event_bus.py</div>
       </div>
       <div class="node node-core-item" data-id="antigravity-client"
-        data-tip="<strong>Antigravity Client + Prompt Cache</strong>Singleton Antigravity client with lru_cache. build_cached_system() splits system prompts into static prefix (cache_control: ephemeral) + dynamic context. Saves ~80% tokens on repeat calls.<br><code>core/client.py → build_cached_system()</code>">
+        data-tip="<strong>Gemini Client + Prompt Cache</strong>Singleton Gemini client with lru_cache. build_cached_system() splits system prompts into static prefix (cache_control: ephemeral) + dynamic context. Saves ~80% tokens on repeat calls.<br><code>core/client.py → build_cached_system()</code>">
         <div class="node-pulse"></div><div class="node-icon">💾</div>
         <div class="node-name">Agent Client</div><div class="node-desc">Prompt caching · Singleton · lru_cache</div>
         <div class="node-file">core/client.py</div>
@@ -384,23 +384,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
         <div class="agent-nodes">
 
           <div class="agent-node attendee" data-id="a-attendee"
-            data-tip="<strong>AttendeeExperienceAgent</strong>Handles fan chat via WebSocket. Multi-turn conversation with full tool use loop. Streams responses token-by-token back to mobile app.<br><code>agents/attendee/agent.py</code><br>Model: antigravity-fast<br>Trigger: WebSocket /ws/attendee/{id}">
+            data-tip="<strong>AttendeeExperienceAgent</strong>Handles fan chat via WebSocket. Multi-turn conversation with full tool use loop. Streams responses token-by-token back to mobile app.<br><code>agents/attendee/agent.py</code><br>Model: gemini-2.5-flash<br>Trigger: WebSocket /ws/attendee/{id}">
             <div class="node-pulse"></div>
-            <div class="an-header"><span class="an-icon">💬</span><div><div class="an-name">AttendeeExperienceAgent</div><div class="an-model">antigravity-fast · Streaming · WebSocket</div></div></div>
+            <div class="an-header"><span class="an-icon">💬</span><div><div class="an-name">AttendeeExperienceAgent</div><div class="an-model">gemini-2.5-flash · Streaming · WebSocket</div></div></div>
             <div class="an-tools"><span class="agent-tool">lookup_seat</span><span class="agent-tool">get_queue_wait</span><span class="agent-tool">find_nearest_amenity</span><span class="agent-tool">place_food_order</span><span class="agent-tool">request_accessibility_help</span></div>
           </div>
 
           <div class="agent-node emergency" data-id="a-emergency"
-            data-tip="<strong>EmergencyResponseAgent</strong>Fires on any 'critical' or 'emergency' event from the event bus. Uses Opus 4.7 because each emergency is a novel combination of factors no ruleset covers.<br><code>agents/emergency/agent.py</code><br>Model: antigravity-pro · max_tokens: 2048<br>Trigger: alert.critical.* or alert.emergency.*">
+            data-tip="<strong>EmergencyResponseAgent</strong>Fires on any 'critical' or 'emergency' event from the event bus. Uses Opus 4.7 because each emergency is a novel combination of factors no ruleset covers.<br><code>agents/emergency/agent.py</code><br>Model: gemini-2.5-pro · max_tokens: 2048<br>Trigger: alert.critical.* or alert.emergency.*">
             <div class="node-pulse"></div>
-            <div class="an-header"><span class="an-icon">🚨</span><div><div class="an-name" style="color:#ff9999">EmergencyResponseAgent</div><div class="an-model">antigravity-pro · 2048 tokens · Adaptive</div></div></div>
+            <div class="an-header"><span class="an-icon">🚨</span><div><div class="an-name" style="color:#ff9999">EmergencyResponseAgent</div><div class="an-model">gemini-2.5-pro · 2048 tokens · Adaptive</div></div></div>
             <div class="an-tools"><span class="agent-tool">get_venue_state</span><span class="agent-tool">get_evacuation_routes</span><span class="agent-tool">activate_pa_announcement</span><span class="agent-tool">contact_emergency_services</span><span class="agent-tool">trigger_zone_evacuation</span><span class="agent-tool">dispatch_medical_team</span></div>
           </div>
 
           <div class="agent-node vision" data-id="a-vision"
-            data-tip="<strong>VisionAnomalyAgent</strong>Receives CameraFrame when anomaly_score > 0.7. Sends base64 image + CV metadata to Antigravity Vision. Returns structured JSON: headcount_estimate, density_level, safety_concerns, risk_score, recommended_action.<br><code>agents/vision_anomaly/agent.py</code><br>Model: antigravity-fast + Vision<br>Trigger: alert.vision.anomaly">
+            data-tip="<strong>VisionAnomalyAgent</strong>Receives CameraFrame when anomaly_score > 0.7. Sends base64 image + CV metadata to Gemini Vision. Returns structured JSON: headcount_estimate, density_level, safety_concerns, risk_score, recommended_action.<br><code>agents/vision_anomaly/agent.py</code><br>Model: gemini-2.5-flash + Vision<br>Trigger: alert.vision.anomaly">
             <div class="node-pulse"></div>
-            <div class="an-header"><span class="an-icon">👁️</span><div><div class="an-name" style="color:#80f0d0">VisionAnomalyAgent</div><div class="an-model">antigravity-fast + Vision · anomaly_score &gt; 0.7</div></div></div>
+            <div class="an-header"><span class="an-icon">👁️</span><div><div class="an-name" style="color:#80f0d0">VisionAnomalyAgent</div><div class="an-model">gemini-2.5-flash + Vision · anomaly_score &gt; 0.7</div></div></div>
             <div class="an-tools"><span class="agent-tool">analyse_frame</span><span class="agent-tool">assess_safety_risk</span><span class="agent-tool">recommend_action</span></div>
           </div>
 
@@ -503,7 +503,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
   <div class="tree-indent1"><span class="tree-dir">config/</span></div>
   <div class="tree-indent2"><span class="tree-file py">settings.py</span> · <span class="tree-file json">venue_layout.json</span> · <span class="tree-file yaml">thresholds.yaml</span></div>
   <div class="tree-indent1"><span class="tree-dir">core/</span></div>
-  <div class="tree-indent2"><span class="tree-file py">client.py</span> <span class="tree-comment">— Antigravity client + prompt caching</span></div>
+  <div class="tree-indent2"><span class="tree-file py">client.py</span> <span class="tree-comment">— Gemini client + prompt caching</span></div>
   <div class="tree-indent2"><span class="tree-file py">event_bus.py</span> <span class="tree-comment">— asyncio.Queue pub/sub</span></div>
   <div class="tree-indent2"><span class="tree-file py">ingestion.py</span> <span class="tree-comment">— normalize + threshold gate + publish</span></div>
   <div class="tree-indent2"><span class="tree-file py">state_store.py</span> <span class="tree-comment">— in-memory VenueState</span></div>
