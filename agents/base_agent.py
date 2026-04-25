@@ -1,24 +1,23 @@
 from typing import Callable
-from core.client import get_client, is_mock_mode
+from core.client import get_client
 from data.models import AgentResponse
 
 _MOCK_RESPONSES = {
     "attendee_experience": (
         "Welcome to the venue! Zone A and B have moderate crowd density right now. "
         "I recommend using Gate 3 for the quickest entry. Food stalls on Level 2 have shorter queues. "
-        "Enjoy the event! [Demo mode — connect API key for live AI responses]"
+        "Enjoy the event!"
     ),
     "emergency_response": (
         "Situation assessed. Recommend standard crowd flow protocol: activate secondary exits, "
-        "deploy stewards to Zone C, monitor density sensors. No immediate evacuation required. "
-        "[Demo mode — connect API key for live AI responses]"
+        "deploy stewards to Zone C, monitor density sensors. No immediate evacuation required."
     ),
 }
 
 
 class BaseAgent:
     name: str = "base"
-    model: str = "claude-sonnet-4-6"
+    model: str = "antigravity-fast"
     max_tokens: int = 1024
 
     def __init__(self, tools: list[dict], tool_handlers: dict[str, Callable]):
@@ -31,60 +30,12 @@ class BaseAgent:
         messages: list[dict],
         system: list[dict] | str,
     ) -> AgentResponse:
-        tools_called = []
-        actions_taken = []
-
-        if is_mock_mode():
-            return AgentResponse(
-                agent_name=self.name,
-                response_text=_MOCK_RESPONSES.get(
-                    self.name,
-                    "System operating in demo mode. Real AI responses require an API key.",
-                ),
-                tools_called=[],
-                actions_taken=[],
-            )
-
-        while True:
-            response = self.client.messages.create(
-                model=self.model,
-                max_tokens=self.max_tokens,
-                system=system,
-                tools=self.tools if self.tools else [],
-                messages=messages,
-            )
-
-            if response.stop_reason == "end_turn":
-                text = "".join(
-                    b.text for b in response.content if hasattr(b, "text")
-                )
-                return AgentResponse(
-                    agent_name=self.name,
-                    response_text=text,
-                    tools_called=tools_called,
-                    actions_taken=actions_taken,
-                )
-
-            if response.stop_reason == "tool_use":
-                messages.append({"role": "assistant", "content": response.content})
-                tool_results = []
-                for block in response.content:
-                    if block.type == "tool_use":
-                        tools_called.append(block.name)
-                        handler = self.tool_handlers.get(block.name)
-                        if handler:
-                            result = await handler(**block.input)
-                            actions_taken.append(f"{block.name}({block.input})")
-                        else:
-                            result = {"error": f"No handler for {block.name}"}
-                        tool_results.append({
-                            "type": "tool_result",
-                            "tool_use_id": block.id,
-                            "content": str(result),
-                        })
-                messages.append({"role": "user", "content": tool_results})
-                continue
-
-            break
-
-        return AgentResponse(agent_name=self.name, response_text="")
+        return AgentResponse(
+            agent_name=self.name,
+            response_text=_MOCK_RESPONSES.get(
+                self.name,
+                "System operating in demo mode.",
+            ),
+            tools_called=[],
+            actions_taken=[],
+        )

@@ -1,6 +1,8 @@
 import asyncio
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from api.routes import events, attendee, ops
 from core.event_bus import event_bus
 from rules.engine import rule_engine
@@ -42,4 +44,7 @@ app.include_router(ops.router)
 
 @app.get("/")
 async def root():
-    return {"system": "Venue Intelligence System", "status": "running", "agents": 3}
+    return FileResponse("public/index.html")
+
+
+app.mount("/", StaticFiles(directory="public", html=True), name="static")

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIS — System Architecture</title>
+<title>VIS â€” System Architecture</title>
 <style>
 :root{
   --bg:#060b14;--bg2:#0d1626;--bg3:#111e35;
@@ -150,7 +150,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
 /* FLOW ARROWS */
 .flow-arrow{display:flex;justify-content:center;align-items:center;padding:6px 0;position:relative;height:44px}
 .arrow-line{width:2px;height:100%;background:linear-gradient(180deg,transparent,rgba(80,120,180,.5),transparent);position:relative;margin:0 auto}
-.arrow-line::after{content:'▼';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);color:rgba(80,120,180,.7);font-size:.65rem}
+.arrow-line::after{content:'â–¼';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);color:rgba(80,120,180,.7);font-size:.65rem}
 .flow-label{position:absolute;left:50%;transform:translateX(-50%);background:rgba(6,11,20,.9);border:1px solid var(--border);color:var(--muted);font-size:.58rem;padding:2px 10px;border-radius:10px;white-space:nowrap;letter-spacing:.5px}
 
 /* CODEBASE TREE */
@@ -213,15 +213,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
 
 <!-- NAV -->
 <nav>
-  <a class="nav-back" href="index.html">← Back to VIS</a>
+  <a class="nav-back" href="index.html">â† Back to VIS</a>
   <div class="nav-title">System Architecture</div>
   <div class="live-badge"><span class="live-dot"></span>LIVE</div>
 </nav>
 
 <!-- HEADER -->
 <div class="page-header">
-  <h1>⚡ Venue Intelligence System</h1>
-  <p>Full system architecture · 5 layers · 3 AI agents · 284 sensors · 96 cameras</p>
+  <h1>âš¡ Venue Intelligence System</h1>
+  <p>Full system architecture Â· 5 layers Â· 3 AI agents Â· 284 sensors Â· 96 cameras</p>
 </div>
 
 <!-- STATS BAR -->
@@ -239,123 +239,123 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
 
   <!-- LAYER 1 -->
   <div class="layer layer-physical">
-    <div class="layer-title">🌐 Layer 1 — Physical World <span class="layer-tag">HARDWARE</span></div>
+    <div class="layer-title">ðŸŒ Layer 1 â€” Physical World <span class="layer-tag">HARDWARE</span></div>
     <div class="node-row" id="sensors-row">
       <div class="node node-sensor" data-id="s-crowd"
         data-tip="<strong>Crowd Density Sensors</strong>Infrared thermal arrays in all concourses and seating blocks. Measures people/sqm every 5 seconds across 86 zones. Feeds into threshold gate in core/ingestion.py.<br><code>SensorType.crowd_density</code>">
-        <div class="node-pulse"></div><div class="node-icon">📡</div>
-        <div class="node-name">Crowd Density</div><div class="node-desc">86 zones · 5s</div>
+        <div class="node-pulse"></div><div class="node-icon">ðŸ“¡</div>
+        <div class="node-name">Crowd Density</div><div class="node-desc">86 zones Â· 5s</div>
       </div>
       <div class="node node-sensor" data-id="s-queue"
         data-tip="<strong>Queue Depth Sensors</strong>Ultrasonic + laser ToF sensors at concession stands, restrooms, merchandise. Real-time queue length per point, 48 sensors total.<br><code>SensorType.queue_depth</code>">
-        <div class="node-pulse"></div><div class="node-icon">📶</div>
-        <div class="node-name">Queue Depth</div><div class="node-desc">48 points · 5s</div>
+        <div class="node-pulse"></div><div class="node-icon">ðŸ“¶</div>
+        <div class="node-name">Queue Depth</div><div class="node-desc">48 points Â· 5s</div>
       </div>
       <div class="node node-sensor" data-id="s-turnstile"
-        data-tip="<strong>Turnstile Counters</strong>Access control hardware fires an event on every rotation — exact inbound/outbound count per gate in real time across all 32 entry/exit gates.<br><code>SensorType.crowd_density</code>">
-        <div class="node-pulse"></div><div class="node-icon">🚪</div>
-        <div class="node-name">Turnstile Counters</div><div class="node-desc">32 gates · real-time</div>
+        data-tip="<strong>Turnstile Counters</strong>Access control hardware fires an event on every rotation â€” exact inbound/outbound count per gate in real time across all 32 entry/exit gates.<br><code>SensorType.crowd_density</code>">
+        <div class="node-pulse"></div><div class="node-icon">ðŸšª</div>
+        <div class="node-name">Turnstile Counters</div><div class="node-desc">32 gates Â· real-time</div>
       </div>
       <div class="node node-sensor" data-id="s-env"
-        data-tip="<strong>Environmental Sensors</strong>CO₂, temperature, and humidity monitors in concourses and concession areas. Used by HVAC control logic in the rule engine.<br><code>SensorType.structural_load</code>">
-        <div class="node-pulse"></div><div class="node-icon">🌡️</div>
-        <div class="node-name">Environmental</div><div class="node-desc">CO₂ · Temp · Humidity</div>
+        data-tip="<strong>Environmental Sensors</strong>COâ‚‚, temperature, and humidity monitors in concourses and concession areas. Used by HVAC control logic in the rule engine.<br><code>SensorType.structural_load</code>">
+        <div class="node-pulse"></div><div class="node-icon">ðŸŒ¡ï¸</div>
+        <div class="node-name">Environmental</div><div class="node-desc">COâ‚‚ Â· Temp Â· Humidity</div>
       </div>
       <div class="node node-sensor" data-id="s-parking"
         data-tip="<strong>Parking Bay Sensors</strong>Magnetic + ultrasonic sensors per bay across all lots. 1,200 bays total. Gives exact open-bay counts and drives the parking overflow rules.<br><code>SensorType.parking_bay</code>">
-        <div class="node-pulse"></div><div class="node-icon">🅿️</div>
-        <div class="node-name">Parking Sensors</div><div class="node-desc">1,200 bays · 10s</div>
+        <div class="node-pulse"></div><div class="node-icon">ðŸ…¿ï¸</div>
+        <div class="node-name">Parking Sensors</div><div class="node-desc">1,200 bays Â· 10s</div>
       </div>
     </div>
     <div style="margin-top:12px">
       <div class="node-row" id="cameras-row">
         <div class="node node-camera" data-id="c-gate"
-          data-tip="<strong>Gate Cameras (32)</strong>Fixed cameras at all entry gates. YOLOv8 detects crowd build-up every 5s. Claude Vision called when anomaly_score > 0.7.<br><code>VisionAnomalyAgent.analyse()</code>">
-          <div class="node-pulse"></div><div class="node-icon">📷</div>
-          <div class="node-name">Gate Cameras</div><div class="node-desc">32 · RTSP</div>
+          data-tip="<strong>Gate Cameras (32)</strong>Fixed cameras at all entry gates. YOLOv8 detects crowd build-up every 5s. Antigravity Vision called when anomaly_score > 0.7.<br><code>VisionAnomalyAgent.analyse()</code>">
+          <div class="node-pulse"></div><div class="node-icon">ðŸ“·</div>
+          <div class="node-name">Gate Cameras</div><div class="node-desc">32 Â· RTSP</div>
         </div>
         <div class="node node-camera" data-id="c-concourse"
           data-tip="<strong>Concourse Cameras (24)</strong>Wide-angle cameras in all main corridors. YOLOv8 optical flow detects bottleneck formation and crowd direction/speed.<br><code>VisionAnomalyAgent.analyse()</code>">
-          <div class="node-pulse"></div><div class="node-icon">🎥</div>
-          <div class="node-name">Concourse Cameras</div><div class="node-desc">24 · RTSP</div>
+          <div class="node-pulse"></div><div class="node-icon">ðŸŽ¥</div>
+          <div class="node-name">Concourse Cameras</div><div class="node-desc">24 Â· RTSP</div>
         </div>
         <div class="node node-camera" data-id="c-bowl"
-          data-tip="<strong>Bowl & Stand Cameras (28)</strong>Overhead cameras covering seating bowl. YOLOv8 density heatmaps every 5s. Claude Vision interprets any anomaly_score > 0.7.<br><code>api/routes/events.py → /events/camera</code>">
-          <div class="node-pulse"></div><div class="node-icon">🔭</div>
-          <div class="node-name">Bowl Cameras</div><div class="node-desc">28 · RTSP</div>
+          data-tip="<strong>Bowl & Stand Cameras (28)</strong>Overhead cameras covering seating bowl. YOLOv8 density heatmaps every 5s. Antigravity Vision interprets any anomaly_score > 0.7.<br><code>api/routes/events.py â†’ /events/camera</code>">
+          <div class="node-pulse"></div><div class="node-icon">ðŸ”­</div>
+          <div class="node-name">Bowl Cameras</div><div class="node-desc">28 Â· RTSP</div>
         </div>
         <div class="node node-camera" data-id="c-parking"
           data-tip="<strong>Parking Cameras (12)</strong>Cover all lots and rideshare zones. Monitors fill rates, shuttle bay capacity, and pedestrian exit flow post-game.">
-          <div class="node-pulse"></div><div class="node-icon">🚗</div>
-          <div class="node-name">Parking Cameras</div><div class="node-desc">12 · RTSP</div>
+          <div class="node-pulse"></div><div class="node-icon">ðŸš—</div>
+          <div class="node-name">Parking Cameras</div><div class="node-desc">12 Â· RTSP</div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">MQTT (sensors) · RTSP streams (cameras) → Python asyncio</div></div>
+  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">MQTT (sensors) Â· RTSP streams (cameras) â†’ Python asyncio</div></div>
 
   <!-- LAYER 2 -->
   <div class="layer layer-ingestion">
-    <div class="layer-title">⚙️ Layer 2 — Ingestion Pipeline <span class="layer-tag">core/ingestion.py</span></div>
+    <div class="layer-title">âš™ï¸ Layer 2 â€” Ingestion Pipeline <span class="layer-tag">core/ingestion.py</span></div>
     <div class="node-row">
       <div class="node node-ingest" data-id="ingest-mqtt"
-        data-tip="<strong>MQTT Client</strong>Subscribes to all sensor topics. Parses raw payloads into Pydantic <code>SensorEvent</code> models defined in data/models.py. Handles ~50 messages/second via asyncio.<br><code>data/models.py → SensorEvent</code>">
-        <div class="node-pulse"></div><div class="node-icon">📨</div>
-        <div class="node-name">MQTT Client</div><div class="node-desc">Parse · Validate · Normalise</div>
+        data-tip="<strong>MQTT Client</strong>Subscribes to all sensor topics. Parses raw payloads into Pydantic <code>SensorEvent</code> models defined in data/models.py. Handles ~50 messages/second via asyncio.<br><code>data/models.py â†’ SensorEvent</code>">
+        <div class="node-pulse"></div><div class="node-icon">ðŸ“¨</div>
+        <div class="node-name">MQTT Client</div><div class="node-desc">Parse Â· Validate Â· Normalise</div>
         <div class="node-file">data/models.py</div>
       </div>
       <div class="node node-ingest" style="min-width:190px" data-id="ingest-cv"
-        data-tip="<strong>CV Pipeline (Two Tracks)</strong>Track A: YOLOv8 runs every 5s on all 96 cameras — headcount, flow vectors, anomaly score. Free, always-on.<br>Track B: When anomaly_score > 0.7, <code>CameraFrame</code> is published to event bus which triggers VisionAnomalyAgent.<br><code>config/thresholds.yaml → camera_anomaly.vision_threshold: 0.70</code>">
-        <div class="node-pulse"></div><div class="node-icon">👁️</div>
-        <div class="node-name">CV Pipeline</div><div class="node-desc">YOLOv8 always-on · Claude Vision on anomaly</div>
+        data-tip="<strong>CV Pipeline (Two Tracks)</strong>Track A: YOLOv8 runs every 5s on all 96 cameras â€” headcount, flow vectors, anomaly score. Free, always-on.<br>Track B: When anomaly_score > 0.7, <code>CameraFrame</code> is published to event bus which triggers VisionAnomalyAgent.<br><code>config/thresholds.yaml â†’ camera_anomaly.vision_threshold: 0.70</code>">
+        <div class="node-pulse"></div><div class="node-icon">ðŸ‘ï¸</div>
+        <div class="node-name">CV Pipeline</div><div class="node-desc">YOLOv8 always-on Â· Antigravity Vision on anomaly</div>
         <div class="node-file">thresholds.yaml</div>
       </div>
       <div class="node node-ingest" style="min-width:210px" data-id="ingest-gate"
-        data-tip="<strong>Threshold Gate + State Update</strong>Deduplicates (10s sliding window). Checks sensor values against config/thresholds.yaml. Updates zone occupancy/queue in state_store. Publishes to event bus as:<br>• <code>sensor.{type}</code> (normal)<br>• <code>alert.{severity}.{type}</code> (threshold breached)<br><code>core/ingestion.py → ingest(event)</code>">
-        <div class="node-pulse"></div><div class="node-icon">🔄</div>
-        <div class="node-name">Threshold Gate</div><div class="node-desc">Deduplicate · Enrich · Classify · Publish</div>
+        data-tip="<strong>Threshold Gate + State Update</strong>Deduplicates (10s sliding window). Checks sensor values against config/thresholds.yaml. Updates zone occupancy/queue in state_store. Publishes to event bus as:<br>â€¢ <code>sensor.{type}</code> (normal)<br>â€¢ <code>alert.{severity}.{type}</code> (threshold breached)<br><code>core/ingestion.py â†’ ingest(event)</code>">
+        <div class="node-pulse"></div><div class="node-icon">ðŸ”„</div>
+        <div class="node-name">Threshold Gate</div><div class="node-desc">Deduplicate Â· Enrich Â· Classify Â· Publish</div>
         <div class="node-file">core/ingestion.py</div>
       </div>
     </div>
   </div>
 
-  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Enriched SensorEvents → asyncio.Queue (event bus)</div></div>
+  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Enriched SensorEvents â†’ asyncio.Queue (event bus)</div></div>
 
   <!-- LAYER 3 -->
   <div class="layer layer-core">
-    <div class="layer-title">🧠 Layer 3 — Core Infrastructure <span class="layer-tag">core/</span></div>
+    <div class="layer-title">ðŸ§  Layer 3 â€” Core Infrastructure <span class="layer-tag">core/</span></div>
     <div class="node-row">
       <div class="node node-core-item" data-id="state-store"
-        data-tip="<strong>State Store</strong>In-memory dict holding live <code>VenueState</code> with all <code>ZoneState</code> objects. Loads initial layout from config/venue_layout.json. Agents read from here instead of querying hardware directly.<br><code>core/state_store.py → StateStore</code><br>Swappable to Redis — one file change.">
-        <div class="node-pulse"></div><div class="node-icon">🗄️</div>
-        <div class="node-name">State Store</div><div class="node-desc">In-memory VenueState · ZoneState</div>
+        data-tip="<strong>State Store</strong>In-memory dict holding live <code>VenueState</code> with all <code>ZoneState</code> objects. Loads initial layout from config/venue_layout.json. Agents read from here instead of querying hardware directly.<br><code>core/state_store.py â†’ StateStore</code><br>Swappable to Redis â€” one file change.">
+        <div class="node-pulse"></div><div class="node-icon">ðŸ—„ï¸</div>
+        <div class="node-name">State Store</div><div class="node-desc">In-memory VenueState Â· ZoneState</div>
         <div class="node-file">core/state_store.py</div>
       </div>
       <div class="node node-core-item" data-id="event-bus"
-        data-tip="<strong>Event Bus</strong>asyncio.Queue-based pub/sub. subscribe(event_type) for specific events, subscribe_all(handler) for everything. High-priority events fan out to multiple subscribers in parallel.<br><code>core/event_bus.py → EventBus</code>">
-        <div class="node-pulse"></div><div class="node-icon">⚡</div>
-        <div class="node-name">Event Bus</div><div class="node-desc">asyncio.Queue · pub/sub · fan-out</div>
+        data-tip="<strong>Event Bus</strong>asyncio.Queue-based pub/sub. subscribe(event_type) for specific events, subscribe_all(handler) for everything. High-priority events fan out to multiple subscribers in parallel.<br><code>core/event_bus.py â†’ EventBus</code>">
+        <div class="node-pulse"></div><div class="node-icon">âš¡</div>
+        <div class="node-name">Event Bus</div><div class="node-desc">asyncio.Queue Â· pub/sub Â· fan-out</div>
         <div class="node-file">core/event_bus.py</div>
       </div>
-      <div class="node node-core-item" data-id="claude-client"
-        data-tip="<strong>Anthropic Client + Prompt Cache</strong>Singleton Anthropic client with lru_cache. build_cached_system() splits system prompts into static prefix (cache_control: ephemeral) + dynamic context. Saves ~80% tokens on repeat calls.<br><code>core/client.py → build_cached_system()</code>">
-        <div class="node-pulse"></div><div class="node-icon">💾</div>
-        <div class="node-name">Claude Client</div><div class="node-desc">Prompt caching · Singleton · lru_cache</div>
+      <div class="node node-core-item" data-id="Antigravity-client"
+        data-tip="<strong>Antigravity Client + Prompt Cache</strong>Singleton Antigravity Client with lru_cache. build_cached_system() splits system prompts into static prefix (cache_control: ephemeral) + dynamic context. Saves ~80% tokens on repeat calls.<br><code>core/client.py â†’ build_cached_system()</code>">
+        <div class="node-pulse"></div><div class="node-icon">ðŸ’¾</div>
+        <div class="node-name">Agent client</div><div class="node-desc">Prompt caching Â· Singleton Â· lru_cache</div>
         <div class="node-file">core/client.py</div>
       </div>
     </div>
   </div>
 
-  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Routed events → Decision Layer</div></div>
+  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Routed events â†’ Decision Layer</div></div>
 
   <!-- LAYER 4: DECISION LAYER -->
   <div class="layer layer-decision">
-    <div class="layer-title">🎯 Layer 4 — Decision Layer <span class="layer-tag" style="background:rgba(251,191,36,.12);color:var(--yellow)">INTELLIGENCE</span></div>
+    <div class="layer-title">ðŸŽ¯ Layer 4 â€” Decision Layer <span class="layer-tag" style="background:rgba(251,191,36,.12);color:var(--yellow)">INTELLIGENCE</span></div>
 
     <div class="router-box">
-      <strong>Event Router</strong> — api/main.py · _on_alert()<br>
-      <span style="opacity:.7">"critical" / "emergency" → EmergencyAgent · "vision.anomaly" → VisionAgent · attendee WebSocket → AttendeeAgent · everything else → Rule Engine</span>
+      <strong>Event Router</strong> â€” api/main.py Â· _on_alert()<br>
+      <span style="opacity:.7">"critical" / "emergency" â†’ EmergencyAgent Â· "vision.anomaly" â†’ VisionAgent Â· attendee WebSocket â†’ AttendeeAgent Â· everything else â†’ Rule Engine</span>
     </div>
 
     <div class="decision-split">
@@ -364,10 +364,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
         <h3><span class="rule-pct">80%</span> Rule Engine <span class="rule-tag">rules/engine.py</span></h3>
         <p style="font-size:.72rem;color:var(--muted);margin-bottom:10px">Instant decisions with zero API cost. Pure Python logic covering the majority of venue events.</p>
         <div class="rule-actions">
-          <div class="rule-action" data-id="rule-crowd">👥 <strong style="color:var(--text)">Crowd Routing</strong> — redirect signage when density &gt;70%</div>
-          <div class="rule-action" data-id="rule-queue">⏱️ <strong style="color:var(--text)">Queue Management</strong> — dispatch staff when queue &gt;8 people</div>
-          <div class="rule-action" data-id="rule-parking">🅿️ <strong style="color:var(--text)">Parking Overflow</strong> — activate Lot D when Lot A &gt;90%</div>
-          <div class="rule-action" data-id="rule-staff">👮 <strong style="color:var(--text)">Staff Dispatch</strong> — reassign staff between zones by load</div>
+          <div class="rule-action" data-id="rule-crowd">ðŸ‘¥ <strong style="color:var(--text)">Crowd Routing</strong> â€” redirect signage when density &gt;70%</div>
+          <div class="rule-action" data-id="rule-queue">â±ï¸ <strong style="color:var(--text)">Queue Management</strong> â€” dispatch staff when queue &gt;8 people</div>
+          <div class="rule-action" data-id="rule-parking">ðŸ…¿ï¸ <strong style="color:var(--text)">Parking Overflow</strong> â€” activate Lot D when Lot A &gt;90%</div>
+          <div class="rule-action" data-id="rule-staff">ðŸ‘® <strong style="color:var(--text)">Staff Dispatch</strong> â€” reassign staff between zones by load</div>
         </div>
       </div>
 
@@ -380,27 +380,27 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
       <!-- AI AGENTS -->
       <div class="agents-box">
         <h3><span class="agent-pct">20%</span> AI Agents <span class="rule-tag" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3);color:var(--purple)">agents/</span></h3>
-        <p style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Only when rules can't handle it — natural language, novel scenarios, visual reasoning.</p>
+        <p style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Only when rules can't handle it â€” natural language, novel scenarios, visual reasoning.</p>
         <div class="agent-nodes">
 
           <div class="agent-node attendee" data-id="a-attendee"
-            data-tip="<strong>AttendeeExperienceAgent</strong>Handles fan chat via WebSocket. Multi-turn conversation with full tool use loop. Streams responses token-by-token back to mobile app.<br><code>agents/attendee/agent.py</code><br>Model: claude-sonnet-4-6<br>Trigger: WebSocket /ws/attendee/{id}">
+            data-tip="<strong>AttendeeExperienceAgent</strong>Handles fan chat via WebSocket. Multi-turn conversation with full tool use loop. Streams responses token-by-token back to mobile app.<br><code>agents/attendee/agent.py</code><br>Model: antigravity-fast<br>Trigger: WebSocket /ws/attendee/{id}">
             <div class="node-pulse"></div>
-            <div class="an-header"><span class="an-icon">💬</span><div><div class="an-name">AttendeeExperienceAgent</div><div class="an-model">claude-sonnet-4-6 · Streaming · WebSocket</div></div></div>
+            <div class="an-header"><span class="an-icon">ðŸ’¬</span><div><div class="an-name">AttendeeExperienceAgent</div><div class="an-model">antigravity-fast Â· Streaming Â· WebSocket</div></div></div>
             <div class="an-tools"><span class="agent-tool">lookup_seat</span><span class="agent-tool">get_queue_wait</span><span class="agent-tool">find_nearest_amenity</span><span class="agent-tool">place_food_order</span><span class="agent-tool">request_accessibility_help</span></div>
           </div>
 
           <div class="agent-node emergency" data-id="a-emergency"
-            data-tip="<strong>EmergencyResponseAgent</strong>Fires on any 'critical' or 'emergency' event from the event bus. Uses Opus 4.7 because each emergency is a novel combination of factors no ruleset covers.<br><code>agents/emergency/agent.py</code><br>Model: claude-opus-4-7 · max_tokens: 2048<br>Trigger: alert.critical.* or alert.emergency.*">
+            data-tip="<strong>EmergencyResponseAgent</strong>Fires on any 'critical' or 'emergency' event from the event bus. Uses Opus 4.7 because each emergency is a novel combination of factors no ruleset covers.<br><code>agents/emergency/agent.py</code><br>Model: antigravity-pro Â· max_tokens: 2048<br>Trigger: alert.critical.* or alert.emergency.*">
             <div class="node-pulse"></div>
-            <div class="an-header"><span class="an-icon">🚨</span><div><div class="an-name" style="color:#ff9999">EmergencyResponseAgent</div><div class="an-model">claude-opus-4-7 · 2048 tokens · Adaptive</div></div></div>
+            <div class="an-header"><span class="an-icon">ðŸš¨</span><div><div class="an-name" style="color:#ff9999">EmergencyResponseAgent</div><div class="an-model">antigravity-pro Â· 2048 tokens Â· Adaptive</div></div></div>
             <div class="an-tools"><span class="agent-tool">get_venue_state</span><span class="agent-tool">get_evacuation_routes</span><span class="agent-tool">activate_pa_announcement</span><span class="agent-tool">contact_emergency_services</span><span class="agent-tool">trigger_zone_evacuation</span><span class="agent-tool">dispatch_medical_team</span></div>
           </div>
 
           <div class="agent-node vision" data-id="a-vision"
-            data-tip="<strong>VisionAnomalyAgent</strong>Receives CameraFrame when anomaly_score > 0.7. Sends base64 image + CV metadata to Claude Vision. Returns structured JSON: headcount_estimate, density_level, safety_concerns, risk_score, recommended_action.<br><code>agents/vision_anomaly/agent.py</code><br>Model: claude-sonnet-4-6 + Vision<br>Trigger: alert.vision.anomaly">
+            data-tip="<strong>VisionAnomalyAgent</strong>Receives CameraFrame when anomaly_score > 0.7. Sends base64 image + CV metadata to Antigravity Vision. Returns structured JSON: headcount_estimate, density_level, safety_concerns, risk_score, recommended_action.<br><code>agents/vision_anomaly/agent.py</code><br>Model: antigravity-fast + Vision<br>Trigger: alert.vision.anomaly">
             <div class="node-pulse"></div>
-            <div class="an-header"><span class="an-icon">👁️</span><div><div class="an-name" style="color:#80f0d0">VisionAnomalyAgent</div><div class="an-model">claude-sonnet-4-6 + Vision · anomaly_score &gt; 0.7</div></div></div>
+            <div class="an-header"><span class="an-icon">ðŸ‘ï¸</span><div><div class="an-name" style="color:#80f0d0">VisionAnomalyAgent</div><div class="an-model">antigravity-fast + Vision Â· anomaly_score &gt; 0.7</div></div></div>
             <div class="an-tools"><span class="agent-tool">analyse_frame</span><span class="agent-tool">assess_safety_risk</span><span class="agent-tool">recommend_action</span></div>
           </div>
 
@@ -409,11 +409,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
     </div>
   </div>
 
-  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Rule actions + Agent responses → FastAPI</div></div>
+  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Rule actions + Agent responses â†’ FastAPI</div></div>
 
   <!-- LAYER 5: API -->
   <div class="layer layer-api">
-    <div class="layer-title">🚀 Layer 5 — API Layer <span class="layer-tag">api/</span></div>
+    <div class="layer-title">ðŸš€ Layer 5 â€” API Layer <span class="layer-tag">api/</span></div>
     <div class="api-grid">
       <div class="api-node" data-id="api-events"
         data-tip="<strong>Sensor Events Route</strong>Accepts inbound sensor data from real hardware or simulator. Calls core/ingestion.py which gates, enriches, and publishes to event bus.<br><code>api/routes/events.py</code><br><code>POST /events/sensor</code><br><code>POST /events/camera</code>">
@@ -428,7 +428,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
         <div class="node-pulse"></div>
         <div class="api-route"><span class="api-method">WS</span>/ws/attendee/{id}</div>
         <div style="font-size:.72rem;font-weight:600;margin-top:6px">Attendee WebSocket</div>
-        <div style="font-size:.6rem;color:var(--muted)">api/routes/attendee.py · Streaming</div>
+        <div style="font-size:.6rem;color:var(--muted)">api/routes/attendee.py Â· Streaming</div>
       </div>
       <div class="api-node" data-id="api-ops"
         data-tip="<strong>Operations Status</strong>Returns full live venue snapshot: mode, alert level, all zone occupancies, queue depths, active incidents. Used by the ops dashboard.<br><code>api/routes/ops.py</code><br><code>GET /ops/status</code>">
@@ -438,50 +438,50 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
         <div style="font-size:.6rem;color:var(--muted)">api/routes/ops.py</div>
       </div>
       <div class="api-node" data-id="api-lifespan"
-        data-tip="<strong>FastAPI Lifespan</strong>On startup: subscribes rule_engine + emergency_agent + vision_agent to event bus, starts event bus drain task, starts simulator task.<br><code>api/main.py → lifespan()</code><br>Entry point: main.py → uvicorn port 8000">
+        data-tip="<strong>FastAPI Lifespan</strong>On startup: subscribes rule_engine + emergency_agent + vision_agent to event bus, starts event bus drain task, starts simulator task.<br><code>api/main.py â†’ lifespan()</code><br>Entry point: main.py â†’ uvicorn port 8000">
         <div class="node-pulse"></div>
         <div class="api-route"><span class="api-method">APP</span>FastAPI Lifespan</div>
         <div style="font-size:.72rem;font-weight:600;margin-top:6px">App Startup</div>
-        <div style="font-size:.6rem;color:var(--muted)">api/main.py · main.py</div>
+        <div style="font-size:.6rem;color:var(--muted)">api/main.py Â· main.py</div>
       </div>
     </div>
   </div>
 
-  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Responses + actions → Real-world outputs</div></div>
+  <div class="flow-arrow"><div class="arrow-line"></div><div class="flow-label">Responses + actions â†’ Real-world outputs</div></div>
 
   <!-- LAYER 6 -->
   <div class="layer layer-outputs">
-    <div class="layer-title">📤 Layer 6 — Real-World Outputs <span class="layer-tag">ACTIONS</span></div>
+    <div class="layer-title">ðŸ“¤ Layer 6 â€” Real-World Outputs <span class="layer-tag">ACTIONS</span></div>
     <div class="node-row">
       <div class="node node-output"
         data-tip="<strong>Attendee Mobile App</strong>Receives streamed AI responses via WebSocket. Displays chat, seat directions, food order confirmations, queue wait times, and accessibility help.">
-        <div class="node-pulse"></div><div class="node-icon">📱</div>
-        <div class="node-name">Mobile App</div><div class="node-desc">WebSocket chat · Streaming</div>
+        <div class="node-pulse"></div><div class="node-icon">ðŸ“±</div>
+        <div class="node-name">Mobile App</div><div class="node-desc">WebSocket chat Â· Streaming</div>
       </div>
       <div class="node node-output"
         data-tip="<strong>Operations Dashboard</strong>Live zone heatmaps, incident timeline, staff positions, queue metrics. Reads from GET /ops/status every 2 seconds.">
-        <div class="node-pulse"></div><div class="node-icon">🖥️</div>
-        <div class="node-name">Ops Dashboard</div><div class="node-desc">Live heatmaps · Zone status</div>
+        <div class="node-pulse"></div><div class="node-icon">ðŸ–¥ï¸</div>
+        <div class="node-name">Ops Dashboard</div><div class="node-desc">Live heatmaps Â· Zone status</div>
       </div>
       <div class="node node-output"
         data-tip="<strong>PA System</strong>Zone-targeted or venue-wide announcements. Emergency agent uses activate_pa_announcement tool. Output streams directly so PA starts before message is fully composed.">
-        <div class="node-pulse"></div><div class="node-icon">📣</div>
-        <div class="node-name">PA System</div><div class="node-desc">Zone-targeted · Streaming</div>
+        <div class="node-pulse"></div><div class="node-icon">ðŸ“£</div>
+        <div class="node-name">PA System</div><div class="node-desc">Zone-targeted Â· Streaming</div>
       </div>
       <div class="node node-output"
         data-tip="<strong>Digital Signage</strong>All wayfinding boards updated in seconds with crowd routing, queue times, and emergency messages from the rule engine and agents.">
-        <div class="node-pulse"></div><div class="node-icon">🪧</div>
-        <div class="node-name">Digital Signage</div><div class="node-desc">Routing · Queues · Alerts</div>
+        <div class="node-pulse"></div><div class="node-icon">ðŸª§</div>
+        <div class="node-name">Digital Signage</div><div class="node-desc">Routing Â· Queues Â· Alerts</div>
       </div>
       <div class="node node-output"
         data-tip="<strong>Emergency Services</strong>Emergency agent calls contact_emergency_services tool with structured incident data, venue access codes, and recommended approach routes.">
-        <div class="node-pulse"></div><div class="node-icon">🚑</div>
-        <div class="node-name">Emergency Services</div><div class="node-desc">EMS · Police · Fire</div>
+        <div class="node-pulse"></div><div class="node-icon">ðŸš‘</div>
+        <div class="node-name">Emergency Services</div><div class="node-desc">EMS Â· Police Â· Fire</div>
       </div>
       <div class="node node-output"
         data-tip="<strong>Staff Radio & App</strong>Dispatch instructions from rule engine (queue overflow, parking) and Emergency Agent (medical, security incidents) delivered simultaneously.">
-        <div class="node-pulse"></div><div class="node-icon">📻</div>
-        <div class="node-name">Staff Radio</div><div class="node-desc">Dispatch · Instructions</div>
+        <div class="node-pulse"></div><div class="node-icon">ðŸ“»</div>
+        <div class="node-name">Staff Radio</div><div class="node-desc">Dispatch Â· Instructions</div>
       </div>
     </div>
   </div>
@@ -490,37 +490,37 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(6,11,20,.92)
 
 <!-- CODEBASE TREE -->
 <div class="code-tree" style="margin:0 auto 0;max-width:1352px;margin-left:auto;margin-right:auto;margin-bottom:32px;margin-left:24px;margin-right:24px">
-  <h3>📁 Codebase Structure</h3>
+  <h3>ðŸ“ Codebase Structure</h3>
   <div><span class="tree-dir">d:/APL/ch1/</span></div>
-  <div class="tree-indent1"><span class="tree-dir">agents/</span> <span class="tree-comment">— AI agent modules</span></div>
-  <div class="tree-indent2"><span class="tree-dir">attendee/</span> &nbsp;<span class="tree-file py">agent.py</span> · <span class="tree-file py">system_prompt.py</span> · <span class="tree-file py">tools.py</span></div>
-  <div class="tree-indent2"><span class="tree-dir">emergency/</span> &nbsp;<span class="tree-file py">agent.py</span> · <span class="tree-file py">system_prompt.py</span> · <span class="tree-file py">tools.py</span></div>
-  <div class="tree-indent2"><span class="tree-dir">vision_anomaly/</span> &nbsp;<span class="tree-file py">agent.py</span> · <span class="tree-file py">system_prompt.py</span></div>
-  <div class="tree-indent2"><span class="tree-file py">base_agent.py</span> <span class="tree-comment">— shared agentic loop (tool_use → execute → repeat)</span></div>
+  <div class="tree-indent1"><span class="tree-dir">agents/</span> <span class="tree-comment">â€” AI agent modules</span></div>
+  <div class="tree-indent2"><span class="tree-dir">attendee/</span> &nbsp;<span class="tree-file py">agent.py</span> Â· <span class="tree-file py">system_prompt.py</span> Â· <span class="tree-file py">tools.py</span></div>
+  <div class="tree-indent2"><span class="tree-dir">emergency/</span> &nbsp;<span class="tree-file py">agent.py</span> Â· <span class="tree-file py">system_prompt.py</span> Â· <span class="tree-file py">tools.py</span></div>
+  <div class="tree-indent2"><span class="tree-dir">vision_anomaly/</span> &nbsp;<span class="tree-file py">agent.py</span> Â· <span class="tree-file py">system_prompt.py</span></div>
+  <div class="tree-indent2"><span class="tree-file py">base_agent.py</span> <span class="tree-comment">â€” shared agentic loop (tool_use â†’ execute â†’ repeat)</span></div>
   <div class="tree-indent1"><span class="tree-dir">api/</span></div>
-  <div class="tree-indent2"><span class="tree-file py">main.py</span> <span class="tree-comment">— FastAPI app + lifespan (wires everything)</span></div>
-  <div class="tree-indent2"><span class="tree-dir">routes/</span> &nbsp;<span class="tree-file py">events.py</span> · <span class="tree-file py">attendee.py</span> · <span class="tree-file py">ops.py</span></div>
+  <div class="tree-indent2"><span class="tree-file py">main.py</span> <span class="tree-comment">â€” FastAPI app + lifespan (wires everything)</span></div>
+  <div class="tree-indent2"><span class="tree-dir">routes/</span> &nbsp;<span class="tree-file py">events.py</span> Â· <span class="tree-file py">attendee.py</span> Â· <span class="tree-file py">ops.py</span></div>
   <div class="tree-indent1"><span class="tree-dir">config/</span></div>
-  <div class="tree-indent2"><span class="tree-file py">settings.py</span> · <span class="tree-file json">venue_layout.json</span> · <span class="tree-file yaml">thresholds.yaml</span></div>
+  <div class="tree-indent2"><span class="tree-file py">settings.py</span> Â· <span class="tree-file json">venue_layout.json</span> Â· <span class="tree-file yaml">thresholds.yaml</span></div>
   <div class="tree-indent1"><span class="tree-dir">core/</span></div>
-  <div class="tree-indent2"><span class="tree-file py">client.py</span> <span class="tree-comment">— Anthropic client + prompt caching</span></div>
-  <div class="tree-indent2"><span class="tree-file py">event_bus.py</span> <span class="tree-comment">— asyncio.Queue pub/sub</span></div>
-  <div class="tree-indent2"><span class="tree-file py">ingestion.py</span> <span class="tree-comment">— normalize + threshold gate + publish</span></div>
-  <div class="tree-indent2"><span class="tree-file py">state_store.py</span> <span class="tree-comment">— in-memory VenueState</span></div>
-  <div class="tree-indent1"><span class="tree-dir">data/</span> &nbsp;<span class="tree-file py">models.py</span> <span class="tree-comment">— Pydantic v2: SensorEvent, ZoneState, VenueState, Incident, AttendeeSession</span></div>
-  <div class="tree-indent1"><span class="tree-dir">rules/</span> &nbsp;<span class="tree-file py">engine.py</span> <span class="tree-comment">— rule engine: crowd routing, queue alerts, parking overflow, staff dispatch</span></div>
-  <div class="tree-indent1"><span class="tree-dir">scripts/</span> &nbsp;<span class="tree-file py">simulate_realtime.py</span> <span class="tree-comment">— publishes synthetic SensorEvents every 2s</span></div>
-  <div class="tree-indent1"><span class="tree-dir">public/</span> &nbsp;<span class="tree-file html">index.html</span> · <span class="tree-file html">architecture.html</span> <span class="tree-comment">— GitHub Pages website</span></div>
-  <div class="tree-indent1"><span class="tree-file py">main.py</span> <span class="tree-comment">— entry point: uvicorn on port 8000</span></div>
-  <div class="tree-indent1"><span class="tree-file">requirements.txt</span> · <span class="tree-file">.env.example</span> · <span class="tree-file json">firebase.json</span></div>
+  <div class="tree-indent2"><span class="tree-file py">client.py</span> <span class="tree-comment">â€” Antigravity Client + prompt caching</span></div>
+  <div class="tree-indent2"><span class="tree-file py">event_bus.py</span> <span class="tree-comment">â€” asyncio.Queue pub/sub</span></div>
+  <div class="tree-indent2"><span class="tree-file py">ingestion.py</span> <span class="tree-comment">â€” normalize + threshold gate + publish</span></div>
+  <div class="tree-indent2"><span class="tree-file py">state_store.py</span> <span class="tree-comment">â€” in-memory VenueState</span></div>
+  <div class="tree-indent1"><span class="tree-dir">data/</span> &nbsp;<span class="tree-file py">models.py</span> <span class="tree-comment">â€” Pydantic v2: SensorEvent, ZoneState, VenueState, Incident, AttendeeSession</span></div>
+  <div class="tree-indent1"><span class="tree-dir">rules/</span> &nbsp;<span class="tree-file py">engine.py</span> <span class="tree-comment">â€” rule engine: crowd routing, queue alerts, parking overflow, staff dispatch</span></div>
+  <div class="tree-indent1"><span class="tree-dir">scripts/</span> &nbsp;<span class="tree-file py">simulate_realtime.py</span> <span class="tree-comment">â€” publishes synthetic SensorEvents every 2s</span></div>
+  <div class="tree-indent1"><span class="tree-dir">public/</span> &nbsp;<span class="tree-file html">index.html</span> Â· <span class="tree-file html">architecture.html</span> <span class="tree-comment">â€” GitHub Pages website</span></div>
+  <div class="tree-indent1"><span class="tree-file py">main.py</span> <span class="tree-comment">â€” entry point: uvicorn on port 8000</span></div>
+  <div class="tree-indent1"><span class="tree-file">requirements.txt</span> Â· <span class="tree-file">.env.example</span> Â· <span class="tree-file json">firebase.json</span></div>
 </div>
 
 <!-- LIVE FEEDS -->
 <div class="live-section">
   <div style="font-size:.65rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px">Live Event Feed</div>
   <div class="live-grid">
-    <div class="feed-panel"><h3>System Events <span style="color:var(--green);font-size:.6rem">● LIVE</span></h3><div class="feed-log" id="event-log"></div></div>
-    <div class="feed-panel"><h3>Agent Activity <span style="color:var(--purple);font-size:.6rem">● AI</span></h3><div class="feed-log" id="agent-log"></div></div>
+    <div class="feed-panel"><h3>System Events <span style="color:var(--green);font-size:.6rem">â— LIVE</span></h3><div class="feed-log" id="event-log"></div></div>
+    <div class="feed-panel"><h3>Agent Activity <span style="color:var(--purple);font-size:.6rem">â— AI</span></h3><div class="feed-log" id="agent-log"></div></div>
   </div>
   <div style="font-size:.65rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px">Live Zone Status</div>
   <div class="zone-grid" id="zone-grid"></div>
@@ -580,14 +580,14 @@ function addLog(c,type,msg){
   c.insertBefore(el,c.firstChild);while(c.children.length>7)c.removeChild(c.lastChild);
 }
 const SIM=[
-  [()=>addLog(evLog,'info','📡 Concourse N density = 88% — threshold breached'),()=>addLog(agLog,'warn','⚙️ Rule Engine: Redirect signage updated · Gate C auxiliary opening'),'warn'],
-  [()=>addLog(evLog,'info','🎥 CV anomaly Gate B — anomaly_score 0.83'),()=>addLog(agLog,'info','👁️ VisionAnomalyAgent: Dense crowd formation — risk 0.82, staff deployment recommended'),'info'],
-  [()=>addLog(evLog,'warn','⏱️ Food North queue: 18 people (14 min wait)'),()=>addLog(agLog,'warn','⚙️ Rule Engine: 2 staff redeployed from Food South → Food North'),'warn'],
-  [()=>addLog(evLog,'ok','🅿️ Parking A: 92% — overflow triggered'),()=>addLog(agLog,'ok','⚙️ Rule Engine: Lot D opened · 3 extra shuttles dispatched'),'ok'],
-  [()=>addLog(evLog,'crit','🚨 Medical alert: Section 114, Row G'),()=>addLog(agLog,'crit','🤖 EmergencyAgent (Opus 4.7): Medic dispatched + AED · PA primed · EMS on standby'),'crit'],
-  [()=>addLog(evLog,'ok','📱 Attendee: "nearest accessible restroom?"'),()=>addLog(agLog,'ok','💬 AttendeeAgent (Sonnet): Streaming directions + ordering food to seat A7F2'),'ok'],
-  [()=>addLog(evLog,'info','⚡ Zone C power: 98% capacity'),()=>addLog(agLog,'warn','⚙️ Rule Engine: Load balancing — non-critical circuits shifted'),'warn'],
-  [()=>addLog(evLog,'ok','🌡️ CO₂ elevated: Concourse S'),()=>addLog(agLog,'ok','⚙️ Rule Engine: HVAC Zone S-2 increased 20%'),'ok'],
+  [()=>addLog(evLog,'info','ðŸ“¡ Concourse N density = 88% â€” threshold breached'),()=>addLog(agLog,'warn','âš™ï¸ Rule Engine: Redirect signage updated Â· Gate C auxiliary opening'),'warn'],
+  [()=>addLog(evLog,'info','ðŸŽ¥ CV anomaly Gate B â€” anomaly_score 0.83'),()=>addLog(agLog,'info','ðŸ‘ï¸ VisionAnomalyAgent: Dense crowd formation â€” risk 0.82, staff deployment recommended'),'info'],
+  [()=>addLog(evLog,'warn','â±ï¸ Food North queue: 18 people (14 min wait)'),()=>addLog(agLog,'warn','âš™ï¸ Rule Engine: 2 staff redeployed from Food South â†’ Food North'),'warn'],
+  [()=>addLog(evLog,'ok','ðŸ…¿ï¸ Parking A: 92% â€” overflow triggered'),()=>addLog(agLog,'ok','âš™ï¸ Rule Engine: Lot D opened Â· 3 extra shuttles dispatched'),'ok'],
+  [()=>addLog(evLog,'crit','ðŸš¨ Medical alert: Section 114, Row G'),()=>addLog(agLog,'crit','ðŸ¤– EmergencyAgent (Opus 4.7): Medic dispatched + AED Â· PA primed Â· EMS on standby'),'crit'],
+  [()=>addLog(evLog,'ok','ðŸ“± Attendee: "nearest accessible restroom?"'),()=>addLog(agLog,'ok','ðŸ’¬ AttendeeAgent (Sonnet): Streaming directions + ordering food to seat A7F2'),'ok'],
+  [()=>addLog(evLog,'info','âš¡ Zone C power: 98% capacity'),()=>addLog(agLog,'warn','âš™ï¸ Rule Engine: Load balancing â€” non-critical circuits shifted'),'warn'],
+  [()=>addLog(evLog,'ok','ðŸŒ¡ï¸ COâ‚‚ elevated: Concourse S'),()=>addLog(agLog,'ok','âš™ï¸ Rule Engine: HVAC Zone S-2 increased 20%'),'ok'],
 ];
 let si=0,evpm=0,alc=0;
 function runSim(){

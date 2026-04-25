@@ -86,7 +86,7 @@ class AttendeeSession(BaseModel):
     seat: Optional[SeatLocation] = None
     accessibility_needs: list[str] = []
     language: str = "en"
-    conversation_history: list[dict] = []   # Claude messages format
+    conversation_history: list[dict] = []   # message format
 
 
 # ── Agent I/O ────────────────────────────────────────────────────────────────
