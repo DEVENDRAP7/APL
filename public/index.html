@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIS â€” Venue Intelligence System</title>
+<title>VIS — Venue Intelligence System</title>
 <style>
 :root{
   --bg:#060c18;--bg2:#0d1526;--bg3:#111e35;
@@ -52,16 +52,7 @@ section{padding:80px 40px;max-width:1300px;margin:0 auto}
 .problem-card h3{font-size:.95rem;font-weight:700;margin-bottom:8px}
 .problem-card p{font-size:.82rem;color:var(--muted);line-height:1.6}
 
-/* ZONE CARDS */
-.zones-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-.zone-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;transition:border-color .3s}
-.zone-card h4{font-size:.78rem;color:var(--muted);margin-bottom:10px;font-weight:500}
-.z-bar-wrap{height:7px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;margin-bottom:8px}
-.z-bar{height:100%;border-radius:4px;transition:width .8s ease,background .5s}
-.z-stats{display:flex;justify-content:space-between;font-size:.65rem}
-.z-level{font-weight:600}
-
-/* â”€â”€â”€ STADIUM SECTION â”€â”€â”€ */
+/* ─── STADIUM SECTION ─── */
 #stadium-view{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:60px 40px}
 .stadium-section-inner{max-width:1300px;margin:0 auto}
 .stadium-layout{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start;margin-top:32px}
@@ -190,7 +181,7 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
 <canvas id="particles"></canvas>
 
 <nav>
-  <div class="nav-logo">âš¡ VIS</div>
+  <div class="nav-logo">⚡ VIS</div>
   <ul class="nav-links">
     <li><a href="#problem">Problem</a></li>
     <li><a href="#stadium-view">Stadium View</a></li>
@@ -205,12 +196,12 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
 <div class="hero">
   <div class="hero-bg"></div>
   <div style="position:relative;z-index:1">
-    <div class="hero-badge"><span class="pulse"></span>LIVE SYSTEM Â· REAL-TIME AI</div>
+    <div class="hero-badge"><span class="pulse"></span>LIVE SYSTEM · REAL-TIME AI</div>
     <h1>The Future of<br><span>Venue Intelligence</span></h1>
-    <p>An AI-powered multi-agent ecosystem that transforms how 72,000+ fans experience large-scale sporting events â€” from crowd safety to personalised assistance.</p>
+    <p>An AI-powered multi-agent ecosystem that transforms how 72,000+ fans experience large-scale sporting events — from crowd safety to personalised assistance.</p>
     <div class="hero-btns">
-      <button class="btn-primary" onclick="document.getElementById('stadium-view').scrollIntoView({behavior:'smooth'})">ðŸŸï¸ See Live Stadium</button>
-      <button class="btn-secondary" onclick="document.getElementById('chat-demo').scrollIntoView({behavior:'smooth'})">ðŸ’¬ Try Attendee Chat</button>
+      <button class="btn-primary" onclick="document.getElementById('stadium-view').scrollIntoView({behavior:'smooth'})">🏟️ See Live Stadium</button>
+      <button class="btn-secondary" onclick="document.getElementById('chat-demo').scrollIntoView({behavior:'smooth'})">💬 Try Attendee Chat</button>
     </div>
     <div class="hero-stats">
       <div class="hero-stat"><div class="val" style="color:var(--blue)" id="h-att">72,441</div><div class="lbl">LIVE ATTENDEES</div></div>
@@ -225,14 +216,14 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
 <section id="problem">
   <div class="section-tag">The Challenge</div>
   <div class="section-title">What breaks at 72,000 people</div>
-  <p class="section-sub">Every large event faces the same systemic failures â€” and they all compound each other at scale.</p>
+  <p class="section-sub">Every large event faces the same systemic failures — and they all compound each other at scale.</p>
   <div class="problems">
-    <div class="problem-card"><div class="problem-icon">ðŸš¶â€â™‚ï¸</div><h3>Crowd Bottlenecks</h3><p>Entry gates and concourses become dangerously congested with no real-time intelligence to redistribute flow.</p></div>
-    <div class="problem-card"><div class="problem-icon">â³</div><h3>Long Wait Times</h3><p>Concession queues of 15â€“25 minutes with no dynamic staffing response or attendee guidance to alternatives.</p></div>
-    <div class="problem-card"><div class="problem-icon">ðŸ“»</div><h3>Siloed Staff Comms</h3><p>Security, medics, ushers, and logistics operate on separate channels with no unified coordination layer.</p></div>
-    <div class="problem-card"><div class="problem-icon">ðŸš¨</div><h3>Slow Emergency Response</h3><p>Medical incidents and safety threats take minutes to escalate â€” time that costs lives in critical situations.</p></div>
-    <div class="problem-card"><div class="problem-icon">ðŸ—ºï¸</div><h3>No Personal Guidance</h3><p>Attendees navigate 72,000-person venues alone â€” no smart assistant for seat finding, food orders, or accessibility.</p></div>
-    <div class="problem-card"><div class="problem-icon">ðŸš—</div><h3>Post-Game Chaos</h3><p>Exit surges overwhelm parking lots and transport with no predictive management or dynamic routing.</p></div>
+    <div class="problem-card"><div class="problem-icon">🚶‍♂️</div><h3>Crowd Bottlenecks</h3><p>Entry gates and concourses become dangerously congested with no real-time intelligence to redistribute flow.</p></div>
+    <div class="problem-card"><div class="problem-icon">⏳</div><h3>Long Wait Times</h3><p>Concession queues of 15–25 minutes with no dynamic staffing response or attendee guidance to alternatives.</p></div>
+    <div class="problem-card"><div class="problem-icon">📻</div><h3>Siloed Staff Comms</h3><p>Security, medics, ushers, and logistics operate on separate channels with no unified coordination layer.</p></div>
+    <div class="problem-card"><div class="problem-icon">🚨</div><h3>Slow Emergency Response</h3><p>Medical incidents and safety threats take minutes to escalate — time that costs lives in critical situations.</p></div>
+    <div class="problem-card"><div class="problem-icon">🗺️</div><h3>No Personal Guidance</h3><p>Attendees navigate 72,000-person venues alone — no smart assistant for seat finding, food orders, or accessibility.</p></div>
+    <div class="problem-card"><div class="problem-icon">🚗</div><h3>Post-Game Chaos</h3><p>Exit surges overwhelm parking lots and transport with no predictive management or dynamic routing.</p></div>
   </div>
 </section>
 
@@ -243,7 +234,7 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
       <div>
         <div class="section-tag">Real-Time Operations</div>
         <div class="section-title" style="margin-bottom:4px">Live Stadium View</div>
-        <p style="color:var(--muted);font-size:.85rem">Bird's-eye crowd density â€” updating every 2 seconds. AI manages crowd flow automatically.</p>
+        <p style="color:var(--muted);font-size:.85rem">Bird's-eye crowd density — updating every 2 seconds. AI manages crowd flow automatically.</p>
       </div>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
         <div class="live-pill"><span class="pulse" style="background:var(--green)"></span>LIVE</div>
@@ -251,13 +242,23 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
-      <div class="zones-grid" id="zones-grid"></div>
+    <div class="stadium-layout">
+      <!-- Canvas -->
+      <div class="stadium-canvas-wrap">
+        <canvas id="stadium-canvas" width="760" height="490"></canvas>
+        <div class="stadium-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Normal (&lt;70%)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ff9500"></div>Elevated (70–85%)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Critical (&gt;85%)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#00aaff;border-radius:50%"></div>Camera</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#a855f7;border-radius:50%"></div>AI Routing</div>
+        </div>
+      </div>
 
       <!-- Crowd Management Panel -->
       <div class="crowd-panel">
         <div class="crowd-panel-header">
-          <span class="crowd-panel-title">ðŸ§  Crowd Management</span>
+          <span class="crowd-panel-title">🧠 Crowd Management</span>
           <span class="crowd-mode-badge rule" id="mgmt-mode-badge">RULE ENGINE</span>
         </div>
         <div class="crowd-decisions" id="crowd-decisions"></div>
@@ -285,32 +286,32 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
 <section id="architecture">
   <div class="section-tag">System Design</div>
   <div class="section-title">How the system is built</div>
-  <p class="section-sub">6 layers from physical sensors to real-world action. The rule engine handles 80% instantly â€” AI agents handle the 20% rules can't.</p>
+  <p class="section-sub">6 layers from physical sensors to real-world action. The rule engine handles 80% instantly — AI agents handle the 20% rules can't.</p>
 
   <div style="margin-top:40px;display:flex;flex-direction:column;gap:0">
 
     <!-- Pipeline visual -->
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:28px">
       <div style="background:rgba(0,60,100,.2);border:1px solid rgba(0,170,255,.2);border-radius:12px;padding:18px;text-align:center">
-        <div style="font-size:1.6rem;margin-bottom:8px">ðŸ“¡</div>
+        <div style="font-size:1.6rem;margin-bottom:8px">📡</div>
         <div style="font-size:.8rem;font-weight:700;margin-bottom:4px">Physical Layer</div>
-        <div style="font-size:.68rem;color:var(--muted)">284 IoT sensors Â· 96 CCTV cameras Â· MQTT + RTSP</div>
+        <div style="font-size:.68rem;color:var(--muted)">284 IoT sensors · 96 CCTV cameras · MQTT + RTSP</div>
       </div>
       <div style="background:rgba(0,80,60,.2);border:1px solid rgba(0,220,160,.2);border-radius:12px;padding:18px;text-align:center">
-        <div style="font-size:1.6rem;margin-bottom:8px">âš™ï¸</div>
+        <div style="font-size:1.6rem;margin-bottom:8px">⚙️</div>
         <div style="font-size:.8rem;font-weight:700;margin-bottom:4px">Ingestion Pipeline</div>
-        <div style="font-size:.68rem;color:var(--muted)">Normalize Â· Threshold gate Â· Enrich Â· Publish</div>
+        <div style="font-size:.68rem;color:var(--muted)">Normalize · Threshold gate · Enrich · Publish</div>
         <div style="font-size:.6rem;font-family:monospace;color:var(--teal);margin-top:4px">core/ingestion.py</div>
       </div>
       <div style="background:rgba(80,0,120,.2);border:1px solid rgba(168,85,247,.2);border-radius:12px;padding:18px;text-align:center">
-        <div style="font-size:1.6rem;margin-bottom:8px">âš¡</div>
+        <div style="font-size:1.6rem;margin-bottom:8px">⚡</div>
         <div style="font-size:.8rem;font-weight:700;margin-bottom:4px">Core Infrastructure</div>
-        <div style="font-size:.68rem;color:var(--muted)">Event bus Â· State store Â· Agent client + cache</div>
-        <div style="font-size:.6rem;font-family:monospace;color:var(--purple);margin-top:4px">core/event_bus.py Â· state_store.py</div>
+        <div style="font-size:.68rem;color:var(--muted)">Event bus · State store · Agent client + cache</div>
+        <div style="font-size:.6rem;font-family:monospace;color:var(--purple);margin-top:4px">core/event_bus.py · state_store.py</div>
       </div>
       <div style="background:rgba(20,40,20,.3);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:18px;text-align:center;position:relative;overflow:hidden">
         <div style="position:absolute;top:0;left:0;right:50%;bottom:0;background:rgba(34,197,94,.04);border-right:1px dashed rgba(255,255,255,.08)"></div>
-        <div style="font-size:1.6rem;margin-bottom:8px">ðŸŽ¯</div>
+        <div style="font-size:1.6rem;margin-bottom:8px">🎯</div>
         <div style="font-size:.8rem;font-weight:700;margin-bottom:4px">Decision Layer</div>
         <div style="display:flex;gap:6px;justify-content:center;margin-top:6px">
           <span style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green);font-size:.62rem;padding:2px 8px;border-radius:4px">80% Rules</span>
@@ -318,40 +319,40 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
         </div>
       </div>
       <div style="background:rgba(0,60,80,.2);border:1px solid rgba(0,170,255,.2);border-radius:12px;padding:18px;text-align:center">
-        <div style="font-size:1.6rem;margin-bottom:8px">ðŸš€</div>
+        <div style="font-size:1.6rem;margin-bottom:8px">🚀</div>
         <div style="font-size:.8rem;font-weight:700;margin-bottom:4px">API Layer</div>
-        <div style="font-size:.68rem;color:var(--muted)">FastAPI Â· WebSocket Â· REST endpoints</div>
-        <div style="font-size:.6rem;font-family:monospace;color:var(--blue);margin-top:4px">api/main.py Â· routes/</div>
+        <div style="font-size:.68rem;color:var(--muted)">FastAPI · WebSocket · REST endpoints</div>
+        <div style="font-size:.6rem;font-family:monospace;color:var(--blue);margin-top:4px">api/main.py · routes/</div>
       </div>
       <div style="background:rgba(0,80,40,.2);border:1px solid rgba(34,197,94,.2);border-radius:12px;padding:18px;text-align:center">
-        <div style="font-size:1.6rem;margin-bottom:8px">ðŸ“¤</div>
+        <div style="font-size:1.6rem;margin-bottom:8px">📤</div>
         <div style="font-size:.8rem;font-weight:700;margin-bottom:4px">Real-World Outputs</div>
-        <div style="font-size:.68rem;color:var(--muted)">PA Â· Signage Â· Mobile Â· Emergency Services</div>
+        <div style="font-size:.68rem;color:var(--muted)">PA · Signage · Mobile · Emergency Services</div>
       </div>
     </div>
 
     <!-- Decision split highlight -->
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:28px">
-      <div style="text-align:center;font-size:.72rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:20px">Decision Layer â€” How events get routed</div>
+      <div style="text-align:center;font-size:.72rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:20px">Decision Layer — How events get routed</div>
       <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center">
         <div style="background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:18px">
-          <div style="color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:1px;margin-bottom:10px">âš™ï¸ RULE ENGINE â€” 80%</div>
+          <div style="color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:1px;margin-bottom:10px">⚙️ RULE ENGINE — 80%</div>
           <div style="font-size:.7rem;font-family:monospace;color:var(--muted)">rules/engine.py</div>
           <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
-            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--green)">ðŸ‘¥ Crowd routing â€” redirect when density &gt;70%</div>
-            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--green)">â±ï¸ Queue alerts â€” dispatch staff when queue &gt;8</div>
-            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--green)">ðŸ…¿ï¸ Parking overflow â€” open Lot D at 90%</div>
-            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--green)">ðŸ‘® Staff dispatch â€” rebalance zones by load</div>
+            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--green)">👥 Crowd routing — redirect when density &gt;70%</div>
+            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--green)">⏱️ Queue alerts — dispatch staff when queue &gt;8</div>
+            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--green)">🅿️ Parking overflow — open Lot D at 90%</div>
+            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--green)">👮 Staff dispatch — rebalance zones by load</div>
           </div>
         </div>
-        <div style="text-align:center;color:var(--muted);font-size:1.2rem">âŸ¶</div>
+        <div style="text-align:center;color:var(--muted);font-size:1.2rem">⟶</div>
         <div style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:18px">
-          <div style="color:var(--purple);font-size:.72rem;font-weight:700;letter-spacing:1px;margin-bottom:10px">ðŸ¤– AI AGENTS â€” 20%</div>
+          <div style="color:var(--purple);font-size:.72rem;font-weight:700;letter-spacing:1px;margin-bottom:10px">🤖 AI AGENTS — 20%</div>
           <div style="font-size:.7rem;font-family:monospace;color:var(--muted)">agents/</div>
           <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
-            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--purple)">ðŸ’¬ Natural language fan queries â€” Attendee Agent</div>
-            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--red)">ðŸš¨ Novel emergencies â€” Emergency Agent (Opus 4.7)</div>
-            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--teal)">ðŸ‘ï¸ Camera anomalies â€” Vision Agent (anomaly &gt;0.7)</div>
+            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--purple)">💬 Natural language fan queries — Attendee Agent</div>
+            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--red)">🚨 Novel emergencies — Emergency Agent (Opus 4.7)</div>
+            <div style="font-size:.75rem;color:var(--text);padding:5px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--teal)">👁️ Camera anomalies — Vision Agent (anomaly &gt;0.7)</div>
           </div>
         </div>
       </div>
@@ -359,9 +360,9 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
 
     <div style="text-align:center">
       <a href="architecture.html" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:.9rem;font-weight:600;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(0,170,255,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        âš¡ View Full Interactive Architecture â†’
+        ⚡ View Full Interactive Architecture →
       </a>
-      <p style="font-size:.75rem;color:var(--muted);margin-top:12px">Live particle flows Â· Animated data paths Â· Hover any node for implementation details</p>
+      <p style="font-size:.75rem;color:var(--muted);margin-top:12px">Live particle flows · Animated data paths · Hover any node for implementation details</p>
     </div>
   </div>
 </section>
@@ -374,36 +375,36 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
   <div class="agents-grid">
     <div class="agent-card blue">
       <div class="agent-header">
-        <div class="agent-icon blue">ðŸ’¬</div>
+        <div class="agent-icon blue">💬</div>
         <div>
           <div class="agent-name">Attendee Experience Agent</div>
-          <div class="agent-model">antigravity-fast Â· Streaming</div>
+          <div class="agent-model">antigravity-fast · Streaming</div>
         </div>
       </div>
-      <p class="agent-desc">Handles every fan's personal query in natural language â€” seat finding, accessible routes, food ordering, lost & found. Streams responses in real time to the mobile app via WebSocket.</p>
+      <p class="agent-desc">Handles every fan's personal query in natural language — seat finding, accessible routes, food ordering, lost & found. Streams responses in real time to the mobile app via WebSocket.</p>
       <div class="agent-tools">
         <span class="tool-tag">lookup_seat</span><span class="tool-tag">get_queue_wait</span><span class="tool-tag">find_nearest_amenity</span><span class="tool-tag">place_food_order</span><span class="tool-tag">request_accessibility_help</span>
       </div>
     </div>
     <div class="agent-card purple">
       <div class="agent-header">
-        <div class="agent-icon purple">ðŸš¨</div>
+        <div class="agent-icon purple">🚨</div>
         <div>
           <div class="agent-name">Emergency Response Agent</div>
-          <div class="agent-model">antigravity-pro Â· Adaptive Thinking</div>
+          <div class="agent-model">antigravity-pro · Adaptive Thinking</div>
         </div>
       </div>
-      <p class="agent-desc">Safety-critical reasoning for medical incidents, security threats, fires, and evacuations. Uses Opus 4.7 because every emergency is unique â€” no rule covers every combination of simultaneous incidents.</p>
+      <p class="agent-desc">Safety-critical reasoning for medical incidents, security threats, fires, and evacuations. Uses Opus 4.7 because every emergency is unique — no rule covers every combination of simultaneous incidents.</p>
       <div class="agent-tools">
         <span class="tool-tag">get_venue_state</span><span class="tool-tag">get_evacuation_routes</span><span class="tool-tag">activate_pa_announcement</span><span class="tool-tag">contact_emergency_services</span><span class="tool-tag">trigger_zone_evacuation</span><span class="tool-tag">dispatch_medical_team</span>
       </div>
     </div>
     <div class="agent-card teal">
       <div class="agent-header">
-        <div class="agent-icon teal">ðŸ‘ï¸</div>
+        <div class="agent-icon teal">👁️</div>
         <div>
           <div class="agent-name">Vision Anomaly Agent</div>
-          <div class="agent-model">antigravity-fast Â· Vision</div>
+          <div class="agent-model">antigravity-fast · Vision</div>
         </div>
       </div>
       <p class="agent-desc">Interprets flagged camera frames using Antigravity Vision. YOLOv8 runs free on all 96 cameras every 5 seconds. When anomaly_score exceeds 0.7, Antigravity Vision determines exactly what's happening.</p>
@@ -421,27 +422,27 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
     <div class="section-title" style="margin-bottom:36px">Attendee AI Assistant</div>
     <div class="chat-wrapper">
       <div>
-        <p class="section-sub" style="margin-bottom:24px">Chat with the AI assistant just like an attendee would from the venue app. Ask anything â€” it uses real venue data.</p>
+        <p class="section-sub" style="margin-bottom:24px">Chat with the AI assistant just like an attendee would from the venue app. Ask anything — it uses real venue data.</p>
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px">
           <div style="font-size:.72rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Why AI here?</div>
           <p style="font-size:.83rem;color:var(--muted);line-height:1.7">"Where is the nearest accessible restroom that won't have a long queue, and can you order me a hot dog delivered to my seat while I walk there?"</p>
-          <p style="font-size:.75rem;color:var(--muted);margin-top:10px;opacity:.7">No rule handles this. It requires NLP, live queue data, accessibility routing, and food ordering â€” simultaneously.</p>
+          <p style="font-size:.75rem;color:var(--muted);margin-top:10px;opacity:.7">No rule handles this. It requires NLP, live queue data, accessibility routing, and food ordering — simultaneously.</p>
         </div>
         <div class="event-log">
-          <div class="log-header"><span>System Event Log</span><span style="color:var(--green);font-size:.65rem">â— LIVE</span></div>
+          <div class="log-header"><span>System Event Log</span><span style="color:var(--green);font-size:.65rem">● LIVE</span></div>
           <div class="log-list" id="main-log"></div>
         </div>
       </div>
       <div>
         <div class="chat-box">
           <div class="chat-topbar">
-            <div class="chat-avatar">ðŸ¤–</div>
-            <div><div style="font-size:.85rem;font-weight:600">VIS Assistant</div><div class="chat-online">â— Online Â· antigravity-fast</div></div>
+            <div class="chat-avatar">🤖</div>
+            <div><div style="font-size:.85rem;font-weight:600">VIS Assistant</div><div class="chat-online">● Online · antigravity-fast</div></div>
           </div>
           <div class="chat-msgs" id="chat-msgs">
             <div class="msg ai">
               <div class="sender">VIS Assistant</div>
-              Hi! I'm your MetroArena AI assistant. I can help you find your seat, check queue times, order food, or get accessibility support. What do you need? ðŸ˜Š
+              Hi! I'm your MetroArena AI assistant. I can help you find your seat, check queue times, order food, or get accessibility support. What do you need? 😊
             </div>
           </div>
           <div class="chat-suggestions">
@@ -452,7 +453,7 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
           </div>
           <div class="chat-input-row">
             <input class="chat-input" id="chat-input" placeholder="Ask anything about the venue..." onkeydown="if(event.key==='Enter')sendChat()">
-            <button class="chat-send" onclick="sendChat()">âž¤</button>
+            <button class="chat-send" onclick="sendChat()">➤</button>
           </div>
         </div>
       </div>
@@ -464,13 +465,13 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
 <section id="how">
   <div class="section-tag">Architecture</div>
   <div class="section-title">How it works</div>
-  <p class="section-sub">Five layers from physical hardware to real-world action. The rule engine handles 80% instantly â€” AI agents handle the 20% rules can't.</p>
+  <p class="section-sub">Five layers from physical hardware to real-world action. The rule engine handles 80% instantly — AI agents handle the 20% rules can't.</p>
   <div class="steps">
-    <div class="step"><div class="step-num">1</div><h3>Physical Sensors</h3><p>284 IoT sensors + 96 CCTV cameras publish data every 2â€“5 seconds via MQTT and RTSP streams.</p></div>
+    <div class="step"><div class="step-num">1</div><h3>Physical Sensors</h3><p>284 IoT sensors + 96 CCTV cameras publish data every 2–5 seconds via MQTT and RTSP streams.</p></div>
     <div class="step"><div class="step-num">2</div><h3>Ingestion Pipeline</h3><p>Raw sensor data is normalised, threshold-gated, and enriched with zone metadata before entering the system.</p></div>
-    <div class="step"><div class="step-num">3</div><h3>Rule Engine</h3><p>80% of decisions â€” crowd routing, queue alerts, staff dispatch, parking â€” are instant rule-based code. Zero API cost.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Rule Engine</h3><p>80% of decisions — crowd routing, queue alerts, staff dispatch, parking — are instant rule-based code. Zero API cost.</p></div>
     <div class="step"><div class="step-num">4</div><h3>AI Agents</h3><p>3 Antigravity agents handle what rules can't: natural language chat, novel emergency reasoning, visual anomaly interpretation.</p></div>
-    <div class="step"><div class="step-num">5</div><h3>Real-World Action</h3><p>PA broadcasts, digital signage, staff dispatch, mobile notifications, and emergency calls â€” all automated.</p></div>
+    <div class="step"><div class="step-num">5</div><h3>Real-World Action</h3><p>PA broadcasts, digital signage, staff dispatch, mobile notifications, and emergency calls — all automated.</p></div>
   </div>
 </section>
 
@@ -479,29 +480,29 @@ footer p{color:var(--muted);font-size:.82rem;margin-top:6px}
   <div class="section-tag">Stack</div>
   <div class="section-title">Built With</div>
   <div class="tech-grid">
-    <div class="tech-chip"><div class="t-icon">ðŸ¤–</div>Antigravity Pro</div>
-    <div class="tech-chip"><div class="t-icon">âš¡</div>Antigravity Fast</div>
-    <div class="tech-chip"><div class="t-icon">ðŸ</div>Python 3.13</div>
-    <div class="tech-chip"><div class="t-icon">ðŸš€</div>FastAPI</div>
-    <div class="tech-chip"><div class="t-icon">ðŸ”„</div>asyncio</div>
-    <div class="tech-chip"><div class="t-icon">ðŸ—„ï¸</div>Redis</div>
-    <div class="tech-chip"><div class="t-icon">ðŸ“¡</div>MQTT</div>
-    <div class="tech-chip"><div class="t-icon">ðŸ‘ï¸</div>YOLOv8</div>
-    <div class="tech-chip"><div class="t-icon">ðŸ”¥</div>Firebase</div>
-    <div class="tech-chip"><div class="t-icon">â˜ï¸</div>Google Cloud</div>
-    <div class="tech-chip"><div class="t-icon">ðŸŽ¯</div>Pydantic v2</div>
-    <div class="tech-chip"><div class="t-icon">ðŸ§ª</div>pytest</div>
+    <div class="tech-chip"><div class="t-icon">🤖</div>Antigravity Pro</div>
+    <div class="tech-chip"><div class="t-icon">⚡</div>Antigravity Fast</div>
+    <div class="tech-chip"><div class="t-icon">🐍</div>Python 3.13</div>
+    <div class="tech-chip"><div class="t-icon">🚀</div>FastAPI</div>
+    <div class="tech-chip"><div class="t-icon">🔄</div>asyncio</div>
+    <div class="tech-chip"><div class="t-icon">🗄️</div>Redis</div>
+    <div class="tech-chip"><div class="t-icon">📡</div>MQTT</div>
+    <div class="tech-chip"><div class="t-icon">👁️</div>YOLOv8</div>
+    <div class="tech-chip"><div class="t-icon">🔥</div>Firebase</div>
+    <div class="tech-chip"><div class="t-icon">☁️</div>Google Cloud</div>
+    <div class="tech-chip"><div class="t-icon">🎯</div>Pydantic v2</div>
+    <div class="tech-chip"><div class="t-icon">🧪</div>pytest</div>
   </div>
 </section>
 
 <footer>
-  <div class="footer-logo">âš¡ Venue Intelligence System</div>
+  <div class="footer-logo">⚡ Venue Intelligence System</div>
   <p>AI-powered safety and experience for large-scale sporting venues</p>
-  <p style="margin-top:8px;font-size:.75rem;opacity:.5">Built with Antigravity API Â· Deployed on GitHub Pages Â· Â© 2026</p>
+  <p style="margin-top:8px;font-size:.75rem;opacity:.5">Built with Antigravity API · Deployed on GitHub Pages · © 2026</p>
 </footer>
 
 <script>
-// â”€â”€ PARTICLES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── PARTICLES ────────────────────────────────────────────────────────────────
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 let W = canvas.width = window.innerWidth, H = canvas.height = window.innerHeight;
@@ -515,43 +516,341 @@ function drawParticles(){
 }
 drawParticles();
 
-// â”€â”€ ZONE CARDS (built from SCENARIOS zone keys) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const ZONE_LABELS = {
-  gate_north:'Gate North',concourse_north:'Concourse North',
-  seating_ne:'Seating NE',seating_e:'East Stand',seating_se:'Seating SE',
-  food_north:'Food Court North',gate_south:'Gate South',
-  concourse_south:'Concourse South',seating_sw:'Seating SW',
-  seating_w:'West Stand',seating_nw:'Seating NW',food_south:'Food Court South'
-};
-const SEC_ZONE = Object.keys(ZONE_LABELS);
-const zoneDensity = {};
-SEC_ZONE.forEach(z => { zoneDensity[z] = 0.45 + Math.random()*0.15; });
+// ── STADIUM CANVAS ──────────────────────────────────────────────────────────
+const sCvs = document.getElementById('stadium-canvas');
+const sc = sCvs.getContext('2d');
+const CX = 380, CY = 248;
+const FIELD_W = 220, FIELD_H = 118;
+const INNER_RX = 148, INNER_RY = 92;    // seating inner edge
+const OUTER_RX = 285, OUTER_RY = 178;   // seating outer edge
+const WALL_RX  = 330, WALL_RY  = 210;   // stadium outer wall
 
-// Build zone cards
-const zg = document.getElementById('zones-grid');
-SEC_ZONE.forEach(zid => {
-  const card = document.createElement('div');
-  card.className = 'zone-card'; card.id = 'zc-' + zid;
-  card.innerHTML = `<h4>${ZONE_LABELS[zid]}</h4><div class="z-bar-wrap"><div class="z-bar" id="zb-${zid}" style="width:45%;background:var(--green)"></div></div><div class="z-stats"><span id="zv-${zid}">Occ: 45%</span><span class="z-level" id="zl-${zid}" style="color:var(--green)">NORMAL</span></div>`;
-  zg.appendChild(card);
+// 12 sections × 30° each, starting at -90° (top)
+const SEC_NAMES = [
+  'Gate\nNorth','Sec\n101–110','Concourse\nNE',
+  'East\nUpper','Sec\n111–120','Food\nNorth',
+  'Gate\nSouth','Sec\n201–210','Concourse\nSW',
+  'West\nLower','Sec\n301–310','Food\nSouth'
+];
+const SEC_ZONE = [
+  'gate_north','seating_ne','concourse_north',
+  'seating_e','seating_se','food_north',
+  'gate_south','seating_sw','concourse_south',
+  'seating_w','seating_nw','food_south'
+];
+
+// Zone density state
+const zoneDensity = {};
+SEC_ZONE.forEach(z => { zoneDensity[z] = 0.45 + Math.random()*0.2; });
+
+// Particles per section
+const sectionParticles = Array.from({length:12}, (_, i) => {
+  const particles = [];
+  const startA = (-90 + i*30) * Math.PI/180;
+  const endA   = startA + 30 * Math.PI/180;
+  for (let k=0; k<35; k++) {
+    const a = startA + Math.random()*(endA - startA);
+    const t = 0.1 + Math.random()*0.85;
+    particles.push({ a, t, va:(Math.random()-.5)*0.003, vt:(Math.random()-.5)*0.005 });
+  }
+  return particles;
 });
 
-function updateZoneCards() {
-  SEC_ZONE.forEach(zid => {
-    const pct = Math.round((zoneDensity[zid]||0.5)*100);
-    const color = pct>85?'var(--red)':pct>70?'var(--orange)':'var(--green)';
-    const label = pct>85?'CRITICAL':pct>70?'ELEVATED':'NORMAL';
-    const bar = document.getElementById('zb-'+zid);
-    const val = document.getElementById('zv-'+zid);
-    const lbl = document.getElementById('zl-'+zid);
-    const card = document.getElementById('zc-'+zid);
-    if(bar){bar.style.width=pct+'%';bar.style.background=color;}
-    if(val)val.textContent=`Occ: ${pct}%`;
-    if(lbl){lbl.textContent=label;lbl.style.color=color;}
-    if(card)card.style.borderColor=pct>85?'rgba(255,68,68,.4)':pct>70?'rgba(255,149,0,.3)':'var(--border)';
+// Active routing arrows: [{from, to, alpha}]
+let routingArrows = [];
+// Alert pulses: [{sec, phase}]
+let alertPulses = [];
+// Camera blink phases
+const cameraPhase = Array.from({length:8}, ()=>Math.random()*Math.PI*2);
+
+function densityColor(pct, alpha=1) {
+  if (pct > 85) return `rgba(255,60,60,${alpha})`;
+  if (pct > 70) return `rgba(255,145,0,${alpha})`;
+  if (pct > 50) return `rgba(255,210,30,${alpha})`;
+  return `rgba(40,195,85,${alpha})`;
+}
+
+function sectionFill(pct) {
+  // Dark base with density glow
+  const t = pct/100;
+  if (pct > 85) return `rgba(80,10,10,${0.5+t*0.4})`;
+  if (pct > 70) return `rgba(70,38,0,${0.45+t*0.3})`;
+  if (pct > 50) return `rgba(55,55,5,${0.4+t*0.25})`;
+  return `rgba(8,40,18,${0.4+t*0.2})`;
+}
+
+function drawSection(idx, pct) {
+  const startA = (-90 + idx*30) * Math.PI/180;
+  const endA = startA + 30*Math.PI/180;
+  sc.beginPath();
+  sc.ellipse(CX, CY, OUTER_RX, OUTER_RY, 0, startA, endA, false);
+  sc.ellipse(CX, CY, INNER_RX, INNER_RY, 0, endA, startA, true);
+  sc.closePath();
+  sc.fillStyle = sectionFill(pct);
+  sc.fill();
+  // Density edge glow
+  sc.strokeStyle = densityColor(pct, pct > 70 ? 0.6 : 0.25);
+  sc.lineWidth = 1.2;
+  sc.stroke();
+  // Seat rows: concentric arcs inside section
+  for (let r=0; r<4; r++) {
+    const t = (r+1)/5;
+    const rx = INNER_RX + t*(OUTER_RX-INNER_RX);
+    const ry = INNER_RY + t*(OUTER_RY-INNER_RY);
+    sc.beginPath();
+    sc.ellipse(CX, CY, rx, ry, 0, startA+0.02, endA-0.02);
+    sc.strokeStyle = `rgba(255,255,255,0.04)`;
+    sc.lineWidth = 0.8;
+    sc.stroke();
+  }
+}
+
+function drawField() {
+  // Field shadow
+  const grd = sc.createRadialGradient(CX,CY,10,CX,CY,INNER_RX);
+  grd.addColorStop(0,'rgba(0,180,60,.12)');
+  grd.addColorStop(1,'rgba(0,0,0,0)');
+  sc.fillStyle = grd;
+  sc.beginPath(); sc.ellipse(CX,CY,INNER_RX,INNER_RY,0,0,Math.PI*2); sc.fill();
+
+  // Field surface
+  const fw=FIELD_W/2, fh=FIELD_H/2;
+  sc.fillStyle = '#0e3320';
+  sc.beginPath();
+  sc.roundRect(CX-fw, CY-fh, FIELD_W, FIELD_H, 8);
+  sc.fill();
+
+  // Field stripes
+  for(let i=0;i<5;i++){
+    sc.fillStyle = i%2===0 ? 'rgba(255,255,255,.025)' : 'transparent';
+    if(i%2===0){ sc.fillRect(CX-fw + i*(FIELD_W/5), CY-fh, FIELD_W/5, FIELD_H); }
+  }
+
+  // Field markings
+  sc.strokeStyle = 'rgba(255,255,255,0.2)';
+  sc.lineWidth = 1;
+  // Outline
+  sc.strokeRect(CX-fw+8, CY-fh+8, FIELD_W-16, FIELD_H-16);
+  // Center line
+  sc.beginPath(); sc.moveTo(CX, CY-fh+8); sc.lineTo(CX, CY+fh-8); sc.stroke();
+  // Center circle
+  sc.beginPath(); sc.arc(CX, CY, 22, 0, Math.PI*2); sc.stroke();
+  // Center dot
+  sc.beginPath(); sc.arc(CX, CY, 2.5, 0, Math.PI*2);
+  sc.fillStyle = 'rgba(255,255,255,0.4)'; sc.fill();
+  // Penalty boxes
+  sc.strokeRect(CX-fw+8, CY-32, 42, 64);
+  sc.strokeRect(CX+fw-50, CY-32, 42, 64);
+
+  // FIELD label
+  sc.fillStyle = 'rgba(255,255,255,0.12)';
+  sc.font = 'bold 10px Segoe UI';
+  sc.textAlign = 'center';
+  sc.fillText('PLAYING FIELD', CX, CY+4);
+}
+
+function drawCameras(t) {
+  // 8 cameras placed around concourse
+  for(let i=0;i<8;i++){
+    const a = (i/8)*Math.PI*2 - Math.PI/2;
+    const r = (OUTER_RX + WALL_RX)/2;
+    const ry2 = (OUTER_RY + WALL_RY)/2;
+    const x = CX + r*Math.cos(a);
+    const y = CY + ry2*Math.sin(a);
+    const blink = Math.sin(t*0.002 + cameraPhase[i]) > 0.3;
+    // Camera body
+    sc.beginPath(); sc.arc(x,y,5,0,Math.PI*2);
+    sc.fillStyle = blink ? 'rgba(0,170,255,0.9)' : 'rgba(0,170,255,0.3)';
+    sc.fill();
+    sc.strokeStyle = 'rgba(0,170,255,0.5)'; sc.lineWidth=1; sc.stroke();
+    // Blink glow
+    if(blink){
+      const grd = sc.createRadialGradient(x,y,0,x,y,14);
+      grd.addColorStop(0,'rgba(0,170,255,0.3)'); grd.addColorStop(1,'rgba(0,170,255,0)');
+      sc.beginPath(); sc.arc(x,y,14,0,Math.PI*2); sc.fillStyle=grd; sc.fill();
+    }
+  }
+}
+
+function drawGateLabels() {
+  const gates = [
+    {a:-Math.PI/2, label:'GATE N', color:'#00aaff'},
+    {a:0,          label:'GATE E', color:'#00dca0'},
+    {a:Math.PI/2,  label:'GATE S', color:'#00aaff'},
+    {a:Math.PI,    label:'GATE W', color:'#00dca0'},
+  ];
+  gates.forEach(g => {
+    const x = CX + (WALL_RX+14)*Math.cos(g.a);
+    const y = CY + (WALL_RY+14)*Math.sin(g.a);
+    sc.font = 'bold 9px Segoe UI';
+    sc.textAlign = 'center';
+    sc.textBaseline = 'middle';
+    sc.fillStyle = g.color;
+    sc.fillText(g.label, x, y);
   });
 }
 
+function drawSectionLabel(idx, pct) {
+  const midA = (-90 + idx*30 + 15) * Math.PI/180;
+  const r = (INNER_RX + OUTER_RX)/2;
+  const ry2 = (INNER_RY + OUTER_RY)/2;
+  const x = CX + r*Math.cos(midA);
+  const y = CY + ry2*Math.sin(midA);
+  sc.save();
+  sc.translate(x,y);
+  sc.rotate(midA + Math.PI/2);
+  sc.font = `bold ${pct>70?'8.5':'7.5'}px Segoe UI`;
+  sc.textAlign = 'center';
+  sc.textBaseline = 'middle';
+  sc.fillStyle = pct>85?'#ff9999':pct>70?'#ffd080':'rgba(255,255,255,0.55)';
+  const lines = SEC_NAMES[idx].split('\n');
+  sc.fillText(lines[0], 0, lines[1]?-5:0);
+  if(lines[1]){sc.font='6px Segoe UI';sc.fillStyle='rgba(255,255,255,0.35)';sc.fillText(lines[1],0,5);}
+  sc.restore();
+}
+
+function drawAlertPulses(t) {
+  for(let i=0;i<12;i++){
+    const zone = SEC_ZONE[i];
+    const pct = (zoneDensity[zone]||0.5)*100;
+    if(pct>82){
+      const midA=(-90+i*30+15)*Math.PI/180;
+      const r=(INNER_RX+OUTER_RX)/2;
+      const ry2=(INNER_RY+OUTER_RY)/2;
+      const x=CX+r*Math.cos(midA), y=CY+ry2*Math.sin(midA);
+      const phase=Math.sin(t*0.004+i)*0.5+0.5;
+      const grd=sc.createRadialGradient(x,y,0,x,y,28+phase*12);
+      grd.addColorStop(0,`rgba(255,60,60,${0.25+phase*0.2})`);
+      grd.addColorStop(1,'rgba(255,60,60,0)');
+      sc.beginPath();sc.arc(x,y,28+phase*12,0,Math.PI*2);sc.fillStyle=grd;sc.fill();
+    }
+  }
+}
+
+function drawRoutingArrows() {
+  routingArrows = routingArrows.filter(ar=>ar.alpha>0.05);
+  routingArrows.forEach(ar=>{
+    ar.alpha *= 0.985;
+    const sa=(-90+ar.from*30+15)*Math.PI/180;
+    const ea=(-90+ar.to*30+15)*Math.PI/180;
+    const r=(INNER_RX+OUTER_RX)/2, ry2=(INNER_RY+OUTER_RY)/2;
+    const x1=CX+r*Math.cos(sa), y1=CY+ry2*Math.sin(sa);
+    const x2=CX+r*Math.cos(ea), y2=CY+ry2*Math.sin(ea);
+    const mx=(x1+x2)/2*(0.85), my=(y1+y2)/2*(0.85);
+    sc.beginPath();
+    sc.moveTo(x1,y1);
+    sc.quadraticCurveTo(CX+(mx-CX)*0.6, CY+(my-CY)*0.6, x2,y2);
+    sc.strokeStyle=`rgba(168,85,247,${ar.alpha*0.8})`;
+    sc.lineWidth=1.8;
+    sc.setLineDash([4,3]);
+    sc.stroke();
+    sc.setLineDash([]);
+    // Arrowhead
+    const angle=Math.atan2(y2-(CY+(my-CY)*0.6*0.5), x2-(CX+(mx-CX)*0.6*0.5));
+    sc.beginPath();
+    sc.moveTo(x2,y2);
+    sc.lineTo(x2-8*Math.cos(angle-0.4),y2-8*Math.sin(angle-0.4));
+    sc.lineTo(x2-8*Math.cos(angle+0.4),y2-8*Math.sin(angle+0.4));
+    sc.closePath();
+    sc.fillStyle=`rgba(168,85,247,${ar.alpha*0.9})`;
+    sc.fill();
+  });
+}
+
+function drawCrowdParticles(t) {
+  for(let i=0;i<12;i++){
+    const zone=SEC_ZONE[i];
+    const pct=(zoneDensity[zone]||0.5)*100;
+    const activeCount=Math.round((pct/100)*28);
+    const pts=sectionParticles[i];
+    const startA=(-90+i*30)*Math.PI/180;
+    const endA=startA+30*Math.PI/180;
+    for(let k=0;k<activeCount;k++){
+      const p=pts[k];
+      p.a+=p.va; p.t+=p.vt;
+      if(p.a<startA||p.a>endA){p.va*=-1;p.a=Math.max(startA,Math.min(endA,p.a));}
+      if(p.t<0.05||p.t>0.95){p.vt*=-1;p.t=Math.max(0.05,Math.min(0.95,p.t));}
+      const rx=INNER_RX+p.t*(OUTER_RX-INNER_RX);
+      const ry2=INNER_RY+p.t*(OUTER_RY-INNER_RY);
+      const px=CX+rx*Math.cos(p.a), py=CY+ry2*Math.sin(p.a);
+      const brightness=pct>85?0.8:pct>70?0.65:0.45;
+      sc.beginPath(); sc.arc(px,py,1.2,0,Math.PI*2);
+      sc.fillStyle=densityColor(pct, brightness);
+      sc.fill();
+    }
+  }
+}
+
+function drawStadiumOutline() {
+  // Outer wall
+  const wallGrd=sc.createLinearGradient(CX-WALL_RX,CY,CX+WALL_RX,CY);
+  wallGrd.addColorStop(0,'rgba(0,100,180,0.08)');
+  wallGrd.addColorStop(0.5,'rgba(0,150,255,0.12)');
+  wallGrd.addColorStop(1,'rgba(0,100,180,0.08)');
+  sc.beginPath(); sc.ellipse(CX,CY,WALL_RX,WALL_RY,0,0,Math.PI*2);
+  sc.strokeStyle='rgba(0,150,255,0.35)'; sc.lineWidth=2.5; sc.stroke();
+  sc.fillStyle=wallGrd; sc.fill();
+
+  // Inner concourse ring
+  sc.beginPath(); sc.ellipse(CX,CY,INNER_RX,INNER_RY,0,0,Math.PI*2);
+  sc.fillStyle='rgba(8,16,32,0.85)'; sc.fill();
+  sc.strokeStyle='rgba(255,255,255,0.08)'; sc.lineWidth=1; sc.stroke();
+}
+
+function drawScoreBoard() {
+  sc.fillStyle='rgba(0,0,0,0.7)';
+  sc.fillRect(CX-55,12,110,26);
+  sc.strokeStyle='rgba(0,170,255,0.4)'; sc.lineWidth=1;
+  sc.strokeRect(CX-55,12,110,26);
+  sc.font='bold 10px monospace'; sc.textAlign='center'; sc.textBaseline='middle';
+  sc.fillStyle='#00aaff';
+  const sc2=SCENARIOS[scIdx].name;
+  sc.fillText(`▶ ${sc2.toUpperCase()}  |  ${Math.round(totalDensity)}% AVG`, CX, 25);
+}
+
+let totalDensity=55;
+let animT=0;
+
+function renderStadium() {
+  animT++;
+  sc.clearRect(0,0,sCvs.width,sCvs.height);
+
+  // Background
+  const bgGrd=sc.createRadialGradient(CX,CY,0,CX,CY,WALL_RX+30);
+  bgGrd.addColorStop(0,'#0a1428'); bgGrd.addColorStop(1,'#060c18');
+  sc.fillStyle=bgGrd; sc.fillRect(0,0,sCvs.width,sCvs.height);
+
+  // Draw sections
+  let total=0;
+  for(let i=0;i<12;i++){
+    const zone=SEC_ZONE[i];
+    const pct=(zoneDensity[zone]||0.5)*100;
+    total+=pct;
+    drawSection(i,pct);
+  }
+  totalDensity=total/12;
+
+  drawAlertPulses(animT);
+  drawRoutingArrows();
+  drawStadiumOutline();
+  drawCrowdParticles(animT);
+  drawField();
+  drawCameras(animT);
+
+  // Section labels
+  for(let i=0;i<12;i++){
+    const zone=SEC_ZONE[i];
+    const pct=(zoneDensity[zone]||0.5)*100;
+    drawSectionLabel(i,pct);
+  }
+  drawGateLabels();
+  drawScoreBoard();
+
+  requestAnimationFrame(renderStadium);
+}
+renderStadium();
+
+// ── SCENARIO SIMULATION ──────────────────────────────────────────────────────
 const SCENARIOS = [
   {
     name:'Normal',
@@ -580,26 +879,25 @@ function updateZoneDensities(){
   });
   document.getElementById('scenario-name').textContent=sc.name.toUpperCase();
   document.getElementById('kpi-mode').textContent=sc.name.toUpperCase();
-  updateZoneCards();
   tick++;
   if(tick>=30){tick=0;scIdx=(scIdx+1)%SCENARIOS.length;}
 }
 
-// â”€â”€ CROWD MANAGEMENT FEED â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── CROWD MANAGEMENT FEED ────────────────────────────────────────────────────
 let autoCount=0, aiCount=0, alertCount=0;
 
 const RULE_ACTIONS = [
-  (z,p) => ({type:'rule', text:`Redirecting crowd from ${z} (${p}%) â†’ adjacent gate via digital signage`, zone:z}),
+  (z,p) => ({type:'rule', text:`Redirecting crowd from ${z} (${p}%) → adjacent gate via digital signage`, zone:z}),
   (z,p) => ({type:'rule', text:`Queue alert: ${z} over threshold (${p}%). Dispatching 2 extra staff members`, zone:z}),
-  (z,p) => ({type:'rule', text:`Opening auxiliary lane at ${z} â€” occupancy at ${p}%`, zone:z}),
+  (z,p) => ({type:'rule', text:`Opening auxiliary lane at ${z} — occupancy at ${p}%`, zone:z}),
   (z,p) => ({type:'rule', text:`Parking overflow: routing attendees from ${z} to Lot D`, zone:z}),
   (z,p) => ({type:'rule', text:`Updated wayfinding signs: redirecting from ${z} to uncrowded alternative`, zone:z}),
 ];
 const AI_ACTIONS = [
   (z,p) => ({type:'agent', text:`EmergencyAgent: Medical alert in ${z}. PA activated, EMS dispatched. Evacuation route pre-staged.`, zone:z}),
-  (z,p) => ({type:'agent', text:`EmergencyAgent: Simultaneous surge in ${z} + Gate South. Novel scenario â€” non-standard routing applied.`, zone:z}),
-  (z,p) => ({type:'vision', text:`VisionAgent: Camera 3 at ${z} â€” dense crowd formation detected. Risk score 0.82. Recommend staff deployment.`, zone:z}),
-  (z,p) => ({type:'vision', text:`VisionAgent: Anomaly confirmed at ${z} â€” crowd compaction exceeds safe density. Alerting operations.`, zone:z}),
+  (z,p) => ({type:'agent', text:`EmergencyAgent: Simultaneous surge in ${z} + Gate South. Novel scenario — non-standard routing applied.`, zone:z}),
+  (z,p) => ({type:'vision', text:`VisionAgent: Camera 3 at ${z} — dense crowd formation detected. Risk score 0.82. Recommend staff deployment.`, zone:z}),
+  (z,p) => ({type:'vision', text:`VisionAgent: Anomaly confirmed at ${z} — crowd compaction exceeds safe density. Alerting operations.`, zone:z}),
 ];
 
 function addCrowdDecision(dec){
@@ -630,10 +928,8 @@ function checkAndFireDecisions(){
   document.getElementById('cs-alerts').textContent=alertCount;
   document.getElementById('kpi-alerts').textContent=alertCount;
 
-  // Always fire a decision â€” use highest-density zone if none are critical
-  const allZones=Object.entries(zoneDensity).map(([zone,d])=>({zone,pct:Math.round(d*100)}));
-  const pool=critZones.length>0?critZones:allZones.sort((a,b)=>b.pct-a.pct).slice(0,3);
-  const {zone,pct}=pool[Math.floor(Math.random()*pool.length)];
+  if(critZones.length===0)return;
+  const {zone,pct}=critZones[Math.floor(Math.random()*critZones.length)];
 
   // Pick action type
   const roll=Math.random();
@@ -654,7 +950,7 @@ function checkAndFireDecisions(){
   addCrowdDecision(dec);
 }
 
-// â”€â”€ KPI UPDATES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── KPI UPDATES ──────────────────────────────────────────────────────────────
 let att=72441;
 function updateKPIs(){
   att+=Math.round((Math.random()-.5)*12);
@@ -665,20 +961,20 @@ function updateKPIs(){
   document.getElementById('h-events').textContent=evpm;
 }
 
-// â”€â”€ EVENT LOG â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── EVENT LOG ────────────────────────────────────────────────────────────────
 const LOG_EVENTS=[
-  ['info','ðŸ“¡ Crowd density: Concourse North = 88% â€” threshold breached'],
-  ['warn','â±ï¸ Queue depth: Food Court North â€” 18 people (14 min wait)'],
-  ['ok','ðŸšª Gate South opened auxiliary lane â€” flow normalising'],
-  ['crit','ðŸš¨ Medical alert: Section 114, Row G â€” medic dispatched'],
-  ['info','ðŸŽ¥ CV anomaly detected: Gate B camera â€” Antigravity Vision analysing'],
-  ['ok','ðŸ…¿ï¸ Parking Lot A: 92% â€” overflow Lot D activated'],
-  ['warn','ðŸ‘¥ CrowdFlow rule: Concourse N â†’ redirect signage updated'],
-  ['ok','ðŸ“± Attendee query: seat directions + food order placed'],
-  ['crit','âš¡ Power draw Zone C: 98% â€” load balancing triggered'],
-  ['warn','ðŸŒ¡ï¸ COâ‚‚ elevated: Concourse S â€” HVAC adjustment applied'],
-  ['ok','ðŸšŒ 3 extra shuttle buses dispatched â€” post-game prep'],
-  ['info','ðŸ¤– EmergencyAgent: Novel incident resolved via PA + EMS'],
+  ['info','📡 Crowd density: Concourse North = 88% — threshold breached'],
+  ['warn','⏱️ Queue depth: Food Court North — 18 people (14 min wait)'],
+  ['ok','🚪 Gate South opened auxiliary lane — flow normalising'],
+  ['crit','🚨 Medical alert: Section 114, Row G — medic dispatched'],
+  ['info','🎥 CV anomaly detected: Gate B camera — Antigravity Vision analysing'],
+  ['ok','🅿️ Parking Lot A: 92% — overflow Lot D activated'],
+  ['warn','👥 CrowdFlow rule: Concourse N → redirect signage updated'],
+  ['ok','📱 Attendee query: seat directions + food order placed'],
+  ['crit','⚡ Power draw Zone C: 98% — load balancing triggered'],
+  ['warn','🌡️ CO₂ elevated: Concourse S — HVAC adjustment applied'],
+  ['ok','🚌 3 extra shuttle buses dispatched — post-game prep'],
+  ['info','🤖 EmergencyAgent: Novel incident resolved via PA + EMS'],
 ];
 let logIdx=0;
 function addLogEntry(){
@@ -691,19 +987,19 @@ function addLogEntry(){
   while(mainLog.children.length>10)mainLog.removeChild(mainLog.lastChild);
 }
 
-// â”€â”€ CHAT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── CHAT ─────────────────────────────────────────────────────────────────────
 const CHAT_RESPONSES={
-  "where is my seat":"Your seat is **Section 110, Row G, Seat 14**. From Gate North, follow the blue signs to Level 2, then right to Section 110. About a 3-minute walk. ðŸ—ºï¸\n\nWould you like directions to the nearest restroom on the way?",
-  "shortest food queue":`Based on live data right now:\n\nâ€¢ **Food Court South** â€” ~3 min wait âœ…\nâ€¢ **Food Court North** â€” ~14 min wait âš ï¸\nâ€¢ **Section 120 Kiosk** â€” ~2 min wait âœ… (nearest to you)\n\nI'd recommend the Section 120 kiosk â€” it's just 2 minutes from your seat!`,
-  "wheelchair":"Of course! I've notified our accessibility team right now. A staff member will meet you **within 3â€“5 minutes**. ðŸ¦½\n\nThe nearest accessible restroom is at Gate North Level 1. Can I help with anything else?",
-  "hot dog":"Order placed! ðŸŒ­\n\n**1Ã— Classic Hot Dog** â€” $8.50\nðŸ“ Delivery to **Section 110, Row G**\nâ±ï¸ Ready in approximately **8 minutes**\nðŸ“‹ Order ID: **A7F2**\n\nYou'll get a push notification when it's on its way. Enjoy the game! ðŸŽ‰",
+  "where is my seat":"Your seat is **Section 110, Row G, Seat 14**. From Gate North, follow the blue signs to Level 2, then right to Section 110. About a 3-minute walk. 🗺️\n\nWould you like directions to the nearest restroom on the way?",
+  "shortest food queue":`Based on live data right now:\n\n• **Food Court South** — ~3 min wait ✅\n• **Food Court North** — ~14 min wait ⚠️\n• **Section 120 Kiosk** — ~2 min wait ✅ (nearest to you)\n\nI'd recommend the Section 120 kiosk — it's just 2 minutes from your seat!`,
+  "wheelchair":"Of course! I've notified our accessibility team right now. A staff member will meet you **within 3–5 minutes**. 🦽\n\nThe nearest accessible restroom is at Gate North Level 1. Can I help with anything else?",
+  "hot dog":"Order placed! 🌭\n\n**1× Classic Hot Dog** — $8.50\n📍 Delivery to **Section 110, Row G**\n⏱️ Ready in approximately **8 minutes**\n📋 Order ID: **A7F2**\n\nYou'll get a push notification when it's on its way. Enjoy the game! 🎉",
 };
 function getAIResponse(msg){
   const l=msg.toLowerCase();
   for(const [k,v] of Object.entries(CHAT_RESPONSES)){if(l.includes(k.split(' ')[0]))return v;}
   const f=[
-    "Let me check that! Based on current venue data, your area looks fine. I can help with seat directions, food ordering, or accessibility support â€” what do you need?",
-    `Food Court South is the quietest right now â€” only ~3 min wait. Food Court North has a ~12 min queue. Shall I order something for your seat?`,
+    "Let me check that! Based on current venue data, your area looks fine. I can help with seat directions, food ordering, or accessibility support — what do you need?",
+    `Food Court South is the quietest right now — only ~3 min wait. Food Court North has a ~12 min queue. Shall I order something for your seat?`,
     "Great question! All services are operational. I can find your seat, check queue times, or place a food order. What would you like?",
   ];
   return f[Math.floor(Math.random()*f.length)];
@@ -721,13 +1017,13 @@ async function sendChat(){
   const msg=input.value.trim();if(!msg)return;input.value='';
   const uEl=document.createElement('div');uEl.className='msg user';uEl.innerHTML=`<div class="sender">You</div>${msg}`;msgs.appendChild(uEl);msgs.scrollTop=9999;
   await new Promise(r=>setTimeout(r,700));
-  const aEl=document.createElement('div');aEl.className='msg ai';aEl.innerHTML='<div class="sender">VIS Assistant</div>â ‹ Thinking...';msgs.appendChild(aEl);msgs.scrollTop=9999;
+  const aEl=document.createElement('div');aEl.className='msg ai';aEl.innerHTML='<div class="sender">VIS Assistant</div>⠋ Thinking...';msgs.appendChild(aEl);msgs.scrollTop=9999;
   await new Promise(r=>setTimeout(r,1000));
   await typeMessage(aEl,getAIResponse(msg));
 }
 function sendSuggestion(el){document.getElementById('chat-input').value=el.textContent;sendChat();}
 
-// â”€â”€ START EVERYTHING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── START EVERYTHING ─────────────────────────────────────────────────────────
 setInterval(updateZoneDensities, 2000);
 setInterval(updateKPIs, 2500);
 setInterval(checkAndFireDecisions, 3500);
